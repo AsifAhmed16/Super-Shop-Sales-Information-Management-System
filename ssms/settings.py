@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
+import time
+import logging.config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,8 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'auditlog',
     'account',
-    'product',
+    'items',
     'report',
 ]
 
@@ -140,3 +142,74 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(SITE_ROOT, '../assets/')
 MEDIA_ROOT_URL = '/assets/'
+
+
+def log_setting():
+    global log
+    log = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'standard': {
+                'format': "%(asctime)s.%(msecs)03d  %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                'datefmt': '%d/%m/%Y %H:%M:%S',
+            },
+            'simple': {
+                'format': "{levelname} {message} ",
+                'datefmt': '%d/%m/%Y %H:%M:%S',
+                'style': '{',
+            },
+            'verbose': {
+                'format': '{asctime} {msecs} {levelname} {message} ',
+                'datefmt': '%d/%m/%Y %H:%M:%S',
+                'style': '{',
+            },
+        },
+        'handlers': {
+            'null': {
+                'level': 'DEBUG',
+                'class': 'logging.NullHandler',
+            },
+            'logfile': {
+                'level': 'INFO',
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'filename': 'log_stack/' + str(time.strftime("%d-%m-%Y", time.localtime())) + '.log',
+                'backupCount': 10,
+                'when': 'midnight',
+                'interval': 1,
+                'delay': False,
+                'utc': False,
+                'formatter': 'standard',
+            },
+            'console': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard',
+            },
+            'mail_admins': {
+                'level': 'ERROR',
+                'class': 'django.utils.log.AdminEmailHandler',
+                'email_backend': 'django.core.mail.backends.filebased.EmailBackend',
+            },
+        },
+        'loggers': {
+            'account': {
+                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'level': 'INFO',
+            },
+            'items': {
+                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'level': 'INFO',
+            },
+            'report': {
+                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'level': 'INFO',
+            },
+            'django': {
+                'handlers': ['console'],
+                'propagate': True,
+                'level': 'INFO',
+            },
+        }
+    }
+    return log

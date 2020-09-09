@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser,
     PermissionsMixin, Group)
-# from auditlog.registry import auditlog
+from auditlog.registry import auditlog
 
 
 TAG_CHOICE = (
@@ -175,7 +175,11 @@ class Privilege(models.Model):
         db_table = 'A_PRIVILEGE'
 
 
-# auditlog.register(Role)
-# auditlog.register(Users)
-# auditlog.register(Customer)
-# auditlog.register(Supplier)
+auditlog.register(Role)
+auditlog.register(Users)
+auditlog.register(Customer)
+auditlog.register(Supplier)
+auditlog.register(Menu)
+auditlog.register(Module)
+auditlog.register(URL)
+auditlog.register(Privilege)

@@ -6,8 +6,10 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime, timedelta
 from .models import *
 from .forms import *
+from .decorators import *
 
 
+@login_required("logged_in", 'account:login')
 def index(request):
     display = None
     context = dict()
@@ -184,6 +186,8 @@ def users_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def users_delete(request, id):
     Users.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -212,6 +216,8 @@ def roles_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def roles_process(request, id=None):
     try:
         form = RolesForm
@@ -258,6 +264,8 @@ def roles_process(request, id=None):
         return redirect('account:roles_list')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def roles_delete(request, id):
     Role.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -286,6 +294,8 @@ def customer_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def customer_process(request, id=None):
     try:
         form = CustomerForm
@@ -332,6 +342,8 @@ def customer_process(request, id=None):
         return redirect('account:customer_list')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def customer_delete(request, id):
     Customer.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -360,6 +372,8 @@ def supplier_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def supplier_process(request, id=None):
     try:
         form = SupplierForm
@@ -406,6 +420,8 @@ def supplier_process(request, id=None):
         return redirect('account:supplier_list')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def supplier_delete(request, id):
     Supplier.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -429,6 +445,8 @@ def menus_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def menus_process(request, id=None):
     try:
         form = MenusForm
@@ -475,6 +493,8 @@ def menus_process(request, id=None):
         return redirect('account:menus_list')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def menus_delete(request, id):
     Menu.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -498,6 +518,8 @@ def modules_list(request):
         return redirect('account:index')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def modules_process(request, id=None):
     try:
         form = ModulesForm
@@ -544,6 +566,8 @@ def modules_process(request, id=None):
         return redirect('account:modules_list')
 
 
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def modules_delete(request, id):
     Module.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
@@ -567,8 +591,8 @@ def urls_list(request):
         return redirect('account:index')
 
 
-# @login_required("logged_in", 'account:login')
-# @access_permission_required
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def urls_process(request, id=None):
     try:
         form = URLSForm
@@ -614,16 +638,16 @@ def urls_process(request, id=None):
         return redirect('account:urls_list')
 
 
-# @login_required("logged_in", 'account:login')
-# @access_permission_required
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def urls_delete(request, id):
     URL.objects.get(pk=id).delete()
     messages.error(request, 'Data Deleted')
     return redirect('account:urls_list')
 
 
-# @login_required("logged_in", 'account:login')
-# @access_permission_required
+@login_required("logged_in", 'account:login')
+@access_permission_required
 def privilege_list(request, id):
     try:
         userdata = {

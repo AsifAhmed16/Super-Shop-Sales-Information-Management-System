@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from functools import wraps
-from .models import Users
-from permission.models import URL, Privilege
+from .models import Users, URL, Privilege
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import resolve
