@@ -1,0 +1,119 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="container">
+        <div class="section">
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Welcome to Super-shop Sales management System (SSMS) - <span style="color: purple">{{ data.username }}</span>. SSMS is a e-commerce web application
+                    and a web admin panel to manage a super shop sales.
+                {% else %}
+                    Tervetuloa että SSMS - {{ data.username }}. SSMS on verkkosovellus ja verkkopalvelu huutokauppojen
+                    luomiseen ja niihin osallistumiseen.
+                {% endif %}
+            </p>
+            <div class="divider"></div>
+            <div class="row">
+                <div class="col s12">
+                    <h4 class="header">
+                        {% if data.language == "Eng" %}
+                            Products List: ...
+                        {% else %}
+                            Aktiiviset tuotteet: Valmis huutokauppaan ...
+                        {% endif %}
+                    </h4>
+                </div>
+                <section class="plans-container" id="plans">
+                    {% for each in display %}
+                        <article class="col s12 m6 l4">
+                            <div class="card z-depth-1 hoverable">
+                                <div class="card-image teal darken-2 waves-effect">
+                                    <div class="card-title">{{ each.title }}</div>
+                                    <div class="price"><sup>
+                                        {% if data.language == "Eng" %}
+                                            Min Price
+                                        {% else %}
+                                            Minimi Hinta
+                                        {% endif %}
+                                        - €</sup>{{ each.min_price }}<sub>/EUR</sub>
+                                    </div>
+                                    <div class="price-desc">
+                                        {% if data.language == "Eng" %}
+                                            Posted On
+                                        {% else %}
+                                            Lähettäjä
+                                        {% endif %}
+                                        - {{ each.created_date }}
+                                    </div>
+                                    <div class="price-desc">
+                                        {% if data.language == "Eng" %}
+                                            Deadline
+                                        {% else %}
+                                            Takaraja
+                                        {% endif %}
+                                        - {{ each.deadline }}
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <ul class="collection" style="background-color: white">
+                                        <li class="collection-item">
+                                            {% if data.language == "Eng" %}
+                                                Description
+                                            {% else %}
+                                                Kuvaus
+                                            {% endif %}
+                                            - <br>
+                                            {{ each.description }}
+                                        </li>
+                                        <br>
+                                        <br>
+                                        <br>
+                                    </ul>
+                                </div>
+                                <div class="card-action center-align">
+                                    <a href="#"
+                                       class="waves-effect waves-light btn green">
+                                        {% if data.language == "Eng" %}
+                                            Make a Bid
+                                        {% else %}
+                                            Tee tarjous
+                                        {% endif %}
+                                    </a>
+                                    <a href="#"
+                                       class="waves-effect waves-light btn red">
+                                        {% if data.language == "Eng" %}
+                                            Ban Auction
+                                        {% else %}
+                                            Kieltää huutokauppa
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

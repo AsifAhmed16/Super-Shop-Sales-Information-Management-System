@@ -1,0 +1,111 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div id="basic-tabs" class="section">
+            <h4 class="header">User Privileges</h4>
+            <div class="row">
+                <form action="" class="col s12" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col s12">
+                        <ul class="tabs tab-demo z-depth-1">
+                            {% for each in menus %}
+                                <li class="tab col s3"><a href="#{{ each.name }}">{{ each.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% for each in menus %}
+                        <div class="col s12">
+                            <div id="{{ each.name }}" class="col s12">
+                                <br>
+                                <br>
+                                <div class="row">
+                                    <table class="responsive-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Module Name</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for data in modules %}
+                                            {% if each.id == data.menu_id %}
+                                                <tr>
+                                                    <td>{{ data.name }}</td>
+                                                    {% for url in urls %}
+                                                        {% if data.id == url.module_id %}
+                                                            <td>
+                                                                <div class="switch">
+                                                                    {{ url.tag }}
+                                                                    <label>
+                                                                        Off
+                                                                        <input type="checkbox" name="list"
+                                                                               value="{{ url.menu_id }},{{ url.module_id }},{{ url.id }}"
+                                                                                {% for every in privileges %}
+                                                                                    {% if every.url_id == url.id %}
+                                                                                        checked
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+                                                                        >
+                                                                        <span class="lever"></span> On
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="row">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <a href="{% url 'account:roles_list' %}"
+                                   class="btn waves-effect waves-light brown"><i
+                                        class="mdi-content-clear left"></i>Cancel</a>
+                                <button class="btn cyan waves-effect waves-light right" type="submit"
+                                        name="action">Submit
+                                    <i class="mdi-content-send right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

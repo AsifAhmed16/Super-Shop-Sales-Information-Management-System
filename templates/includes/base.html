@@ -1,0 +1,198 @@
+{% load static %}
+{% include 'includes/header.html' %}
+{% include 'includes/footer.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}SSMS{% endblock %}</title>
+</head>
+<body>
+
+<header id="header" class="page-topbar">
+    <!-- start header nav-->
+    <div class="navbar-fixed">
+        <nav class="navbar-color">
+            <div class="nav-wrapper">
+                <ul class="left">
+                    <li><h1 class="logo-wrapper"><img
+                            src="{% static '' %}images/ssms.png" alt="ssms"
+                            style="position: fixed; top: -4px; left: 130px; width: 15%; height: 9%;"> <span
+                            class="logo-text">SSMS</span>
+                    </h1></li>
+                </ul>
+                <form action="{% url 'account:index' %}" method="post" enctype="multipart/form-data" id="myForm">
+                    {% csrf_token %}
+                    <div class="row">
+
+                    <div class="col s12 m8 l8">
+
+                    <div class="header-search-wrapper hide-on-med-and-down right">
+                        <i class="mdi-action-search"></i>
+                        <input style="width: 80%" type="text" name="Search" class="header-search-input z-depth-2"
+                               placeholder="Search"/>
+                    </div>
+
+                    </div>
+
+                    <div class="col s12 m4 l4">
+
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                                <p>
+                                    <button name="search_btn"
+                                            class="btn-floating btn-large waves-effect waves-light blue-grey" type="submit"
+                                            style="position: absolute; margin-top: -10px; margin-left: -100px">
+                                        <i class="mdi-action-search"></i></button>
+                                </p>
+                        </li>
+                        <li><a href="#" data-activates="chat-out"
+                               class="waves-effect waves-block waves-light chat-collapse"></a>
+                        </li>
+                        {#                        <li><a href="javascript:void(0);"#}
+                        {#                               class="waves-effect waves-block waves-light translation-button"#}
+                        {#                               data-activates="translation-dropdown">ENGLISH</a>#}
+                        {#                        </li>#}
+                        <li><a onclick="Eng_Clicked()"
+                               class="waves-effect waves-block waves-light translation-button"
+                               data-activates="translation-dropdown"><img src="{% static '' %}images/UK.png" alt="UK"/></a>
+                        </li>
+                        <li><a onclick="Ban_Clicked()"
+                               class="waves-effect waves-block waves-light translation-button"
+                               data-activates="translation-dropdown"><img src="{% static '' %}images/BD.png"
+                                                                          alt="BD"/></a></li>
+                        <li><a href="javascript:void(0);"
+                               class="waves-effect waves-block waves-light toggle-fullscreen"><i
+                                class="mdi-action-settings-overscan"></i></a>
+                        </li>
+                        <li>
+                            <a href="{% url 'account:logout' %}">
+                                {% if data.language == "Eng" %}
+                                    Logout
+                                {% else %}
+                                    Merkitä Lainatuksi
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+
+                    </div>
+
+                    </div>
+                    <input type="hidden" id="language" name="language" value="">
+                </form>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Start Page Loading -->
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+<!-- End Page Loading -->
+
+<div id="main" style="min-height: 82vh">
+    <!-- START WRAPPER -->
+    <div class="wrapper">
+
+        <!-- START LEFT SIDEBAR NAV-->
+        <aside id="left-sidebar-nav">
+            <ul id="slide-out" class="side-nav fixed leftside-navigation">
+                <li class="bold active"><a href="{% url 'account:index' %}" class="waves-effect waves-cyan"><i
+                        class="mdi-action-dashboard"></i> Dashboard</a>
+                </li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i
+                                class="mdi-action-view-carousel"></i> Accounts</a>
+                            <div class="collapsible-body">
+                                <ul>
+                                    <li><a href="{% url 'account:users_list' %}">Users</a>
+                                    </li>
+                                    <li><a href="{% url 'account:roles_list' %}">Roles</a>
+                                    </li>
+                                    <li><a href="{% url 'account:customer_list' %}">Customers</a>
+                                    </li>
+                                     <li><a href="{% url 'account:supplier_list' %}">Suppliers</a>
+                                    </li>
+                                    <li><a href="{% url 'account:menus_list' %}">Menus</a>
+                                    </li>
+                                    <li><a href="{% url 'account:modules_list' %}">Modules</a>
+                                    </li>
+                                    <li><a href="{% url 'account:urls_list' %}">URLs</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+        <section id="content">
+            <div class="container">
+            <br>
+            <br>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+    </div>
+</div>
+
+<footer class="page-footer">
+    <div class="footer-copyright">
+        <div class="container">
+            Copyright © 2020 <a class="grey-text text-lighten-4"
+                                href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs"
+                                target="_blank">Jahangirnagar University. </a> All rights reserved.
+            <span class="right"> Developed by <a class="grey-text text-lighten-4"
+                                                            href="http://geekslabs.com/">Asif Ahmed</a></span>
+        </div>
+    </div>
+</footer>
+
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #00bcd4;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover:not(.active) {
+        background-color: #070707;
+    }
+</style>
+
+<script>
+    function Eng_Clicked() {
+        document.getElementById("language").value = "Eng";
+        document.getElementById("myForm").submit();
+    }
+
+    function Ban_Clicked() {
+        document.getElementById("language").value = "Ban";
+        document.getElementById("myForm").submit();
+    }
+</script>
+
+</body>
+
+</html>

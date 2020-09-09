@@ -1,0 +1,78 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div id="table-datatables">
+                <div class="row">
+                    <div>
+                        <h4 class="header">Users List</h4>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row">
+                    <table id="data-table-simple" class="responsive-table display" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>S/L</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Is Active</th>
+                            <th>Privilege</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for each in items %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ each.name }}</td>
+                                <td>{{ each.username }}</td>
+                                <td>{{ each.email }}</td>
+                                <td>{{ each.role.name }}</td>
+                                <td>
+                                    {% if each.is_active == 1 %}
+                                        <span style="color: green">Yes</span>
+                                    {% elif each.is_active == 0 %}
+                                        <span style="color: darkred">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                     <a href="{% url 'account:privilege_list' each.id %}" class="btn-floating waves-effect waves-light indigo"><i class="mdi-action-lock-open"></i></a>
+                                </td>
+                                <td>
+                                     <a href="{% url 'account:users_delete' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% include 'includes/login_style.html' %}
+{% load static %}
+
+{% block content %}
+    <div id="login-page" class="row">
+        <div class="col s12 z-depth-4 card-panel">
+            <form action="" class="login-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        <h5>Register</h5>
+                        <p class="center">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <strong style="color: red">{{ message.message }}</strong>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="name" name="name" type="text" required>
+                        <label for="name" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Name
+                            {% else %}
+                                Nimi
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="location" name="location" type="text" required>
+                        <label for="name" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Location
+                            {% else %}
+                                Osoite
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="phone" name="phone" type="text" required>
+                        <label for="phone" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Phone
+                            {% else %}
+                                puhelin
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-communication-email prefix"></i>
+                        <input id="email" name="email" type="email" required>
+                        <label for="email" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Email
+                            {% else %}
+                                Sähköposti
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="section">
+                    <div id="input-select" class="row margin">
+                        <div class="input-field col s12">
+                            <i class="mdi-social-person-outline prefix"></i>
+                            <select style="margin-left:5em" class="browser-default col s8" id="role" name="role" required>
+                                <option disabled selected value>pick a role</option>
+                                {% for role in roles_list %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="role" class="center-align">
+                                {% if data.language == "Eng" %}
+                                    Role
+                                {% else %}
+                                    rooli
+                                {% endif %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="username" name="username" type="text" required>
+                        <label for="username" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Username
+                            {% else %}
+                                Käyttäjätunnus
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="password" name="password" type="password" required>
+                        <label for="password">
+                            {% if data.language == "Eng" %}
+                                Password
+                            {% else %}
+                                Salasana
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="password-again" name="password-again" type="password" required>
+                        <label for="password-again">
+                            {% if data.language == "Eng" %}
+                                Password Again
+                            {% else %}
+                                Salasana Uudelleen
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button class="btn waves-effect waves-light col s12">
+                            {% if data.language == "Eng" %}
+                                Register Now
+                            {% else %}
+                                Rekisteröidy nyt
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="input-field col s12">
+                        <p class="margin center medium-small sign-up">
+                            {% if data.language == "Eng" %}
+                                Already have an account ?
+                            {% else %}
+                                Onko sinulla jo tili
+                            {% endif %}
+                            <a href="{% url 'account:login' %}">
+                                {% if data.language == "Eng" %}
+                                    Login
+                                {% else %}
+                                    Kirjaudu sisään
+                                {% endif %}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
