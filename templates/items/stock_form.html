@@ -1,0 +1,104 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div id="basic-form" class="section">
+                <div class="row">
+                    <div class="col s12 m12 l3"><p></p></div>
+                    <div class="col s12 m12 l6">
+                        <div class="card-panel">
+                            <h4 class="header2">Stock Form</h4>
+                            <div class="divider"></div>
+                            <div class="row">
+                                <form action="" class="col s12" method="post" enctype="multipart/form-data"
+                                      autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        {% for field in form %}
+                                            <div class="input-field col s12">
+                                                {{ field }}
+                                                <label for="{{ field.id_for_label }}">{{ field.label }} <span
+                                                        class="text-danger">*</span></label>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="input-field col s12">
+                                            <label>Stock Product Image</label>
+                                            <br>
+                                            <br>
+                                            <input id="pro_pic" name="pro_pic" type='file' class="form-control">
+                                            <input type="hidden" class="form-control" value="" id="b64"
+                                                   name="b64">
+                                            <img id="img" src="{{ src_image }}" height="100" style="float: right">
+                                            <br>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <a href="{% url 'items:StockListView' %}"
+                                                   class="btn waves-effect waves-light brown"><i
+                                                        class="mdi-content-clear left"></i>Cancel</a>
+                                                <button class="btn cyan waves-effect waves-light right" type="submit"
+                                                        name="action">Submit
+                                                    <i class="mdi-content-send right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        function readFile() {
+            if (this.files[0].type == "image/png" || this.files[0].type == "image/jpeg" || this.files[0].type == "image/gif") {
+                if (this.files && this.files[0]) {
+                    var FR = new FileReader();
+                    FR.addEventListener("load", function (e) {
+                        document.getElementById("img").src = e.target.result;
+                        document.getElementById("b64").value = e.target.result;
+                    });
+                    FR.readAsDataURL(this.files[0]);
+                }
+            } else {
+                swal("Please Select an Image.");
+                document.getElementById("pro_pic").value = "";
+            }
+        }
+
+        document.getElementById("pro_pic").addEventListener("change", readFile);
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+    </script>
+
+{% endblock %}

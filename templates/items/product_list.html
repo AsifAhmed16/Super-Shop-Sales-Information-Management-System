@@ -1,0 +1,75 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div id="table-datatables">
+                <div class="row">
+                    <div>
+                        <h4 class="header">Product List</h4>
+                    </div>
+                    <div style="float: right">
+                        <a href="{% url 'items:ProductCreateView' %}" class="btn waves-effect waves-light light-green darken-4"><i
+                                class="mdi-content-add left"></i>Add Product</a>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row">
+                    <table id="data-table-simple" class="responsive-table display" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>S/L</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Category</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Expiry Date</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for each in items %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ each.name }}</td>
+                                <td>{{ each.brand }}</td>
+                                <td>{{ each.category.name }}</td>
+                                <td>{{ each.size }}</td>
+                                <td>{{ each.price }}</td>
+                                <td>{{ each.expiry_date }}</td>
+                                <td>
+                                    <a href="{% url 'items:ProductUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>
+                                    <a href="{% url 'items:ProductDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

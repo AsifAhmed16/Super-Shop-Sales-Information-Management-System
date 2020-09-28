@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 import hashlib
 from django.shortcuts import get_object_or_404
-from datetime import datetime, timedelta
+from datetime import datetime
 from .models import *
 from .forms import *
 from .decorators import *
@@ -90,6 +90,13 @@ def login_validate(request):
                 request.session['language'] = user.language
                 user.last_login = datetime.now()
                 user.save()
+                privilege_urls = Privilege.objects.filter(user_id=user.pk)
+                url_list = []
+                for each in privilege_urls:
+                    urls = URL.objects.filter(id=each.url_id).values_list('url', flat=True)
+                    url_list.extend(urls)
+                request.session['urls'] = url_list
+
                 return redirect("account:index")
             else:
                 if request.session['language'] == "Eng":
@@ -224,6 +231,7 @@ def roles_process(request, id=None):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'urls': request.session['urls'],
         }
         context = dict()
         context['data'] = userdata
@@ -235,9 +243,9 @@ def roles_process(request, id=None):
             if form.is_valid():
                 editform = form.save(commit=False)
                 editform.updated_by = request.session['id']
-                editform.updated_date = (datetime.now() + timedelta(hours=6))
+                editform.updated_date = datetime.now()
                 editform.save()
-                messages.success(request, 'Data Updated')
+                messages.success(request, 'Data Successfully Updated')
                 return redirect('account:roles_list')
         elif id:
             roleobj = get_object_or_404(Role, pk=id)
@@ -247,7 +255,7 @@ def roles_process(request, id=None):
             form = RolesForm(request.POST, request.FILES or None)
             if form.is_valid():
                 process_area = form.save(commit=False)
-                process_area.created_date = (datetime.now() + timedelta(hours=6))
+                process_area.created_date = datetime.now()
                 process_area.created_by = request.session['id']
                 process_area.save()
                 messages.success(request, 'Data Successfully Saved')
@@ -313,7 +321,7 @@ def customer_process(request, id=None):
             if form.is_valid():
                 editform = form.save(commit=False)
                 editform.updated_by = request.session['id']
-                editform.updated_date = (datetime.now() + timedelta(hours=6))
+                editform.updated_date = datetime.now()
                 editform.save()
                 messages.success(request, 'Data Updated')
                 return redirect('account:customer_list')
@@ -325,7 +333,7 @@ def customer_process(request, id=None):
             form = CustomerForm(request.POST, request.FILES or None)
             if form.is_valid():
                 process_area = form.save(commit=False)
-                process_area.created_date = (datetime.now() + timedelta(hours=6))
+                process_area.created_date = datetime.now()
                 process_area.created_by = request.session['id']
                 process_area.save()
                 messages.success(request, 'Data Successfully Saved')
@@ -391,7 +399,7 @@ def supplier_process(request, id=None):
             if form.is_valid():
                 editform = form.save(commit=False)
                 editform.updated_by = request.session['id']
-                editform.updated_date = (datetime.now() + timedelta(hours=6))
+                editform.updated_date = datetime.now()
                 editform.save()
                 messages.success(request, 'Data Updated')
                 return redirect('account:supplier_list')
@@ -403,7 +411,7 @@ def supplier_process(request, id=None):
             form = SupplierForm(request.POST, request.FILES or None)
             if form.is_valid():
                 process_area = form.save(commit=False)
-                process_area.created_date = (datetime.now() + timedelta(hours=6))
+                process_area.created_date = datetime.now()
                 process_area.created_by = request.session['id']
                 process_area.save()
                 messages.success(request, 'Data Successfully Saved')
@@ -464,7 +472,7 @@ def menus_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.updated_by = request.session['id']
-                form.updated_date = (datetime.now() + timedelta(hours=6))
+                form.updated_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Updated')
                 return redirect('account:menus_list')
@@ -477,7 +485,7 @@ def menus_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.created_by = request.session['id']
-                form.created_date = (datetime.now() + timedelta(hours=6))
+                form.created_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Saved')
                 return redirect('account:menus_list')
@@ -537,7 +545,7 @@ def modules_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.updated_by = request.session['id']
-                form.updated_date = (datetime.now() + timedelta(hours=6))
+                form.updated_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Updated')
                 return redirect('account:modules_list')
@@ -550,7 +558,7 @@ def modules_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.created_by = request.session['id']
-                form.created_date = (datetime.now() + timedelta(hours=6))
+                form.created_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Saved')
                 return redirect('account:modules_list')
@@ -609,7 +617,7 @@ def urls_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.updated_by = request.session['id']
-                form.updated_date = (datetime.now() + timedelta(hours=6))
+                form.updated_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Updated')
                 return redirect('account:urls_list')
@@ -622,7 +630,7 @@ def urls_process(request, id=None):
             if form.is_valid():
                 form = form.save(commit=False)
                 form.created_by = request.session['id']
-                form.created_date = (datetime.now() + timedelta(hours=6))
+                form.created_date = datetime.now()
                 form.save()
                 messages.success(request, 'Data Saved')
                 return redirect('account:urls_list')

@@ -55,9 +55,10 @@ class Stock(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    net_total = models.FloatField()
     ref_code = models.CharField(max_length=20, blank=True, null=True)
     ordered_date = models.DateTimeField()
     shipping_address = models.CharField(max_length=100, blank=True, null=True)
