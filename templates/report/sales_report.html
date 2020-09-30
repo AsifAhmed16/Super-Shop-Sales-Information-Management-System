@@ -29,31 +29,33 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2">Stock Form</h4>
+                            <h4 class="header2" style="text-align: center; vertical-align: middle;"><b>Sales Report</b></h4>
                             <div class="divider"></div>
                             <div class="row">
-                                <form action="" class="col s12" method="post" enctype="multipart/form-data"
+                                <form action="{% url 'report:export_sales_report' %}" class="col s12" method="post" enctype="multipart/form-data"
                                       autocomplete="off">
                                     {% csrf_token %}
                                     <div class="row">
-                                        {% for field in form %}
-                                            <div class="input-field col s12">
-                                                {{ field }}
-                                                <label for="{{ field.id_for_label }}">{{ field.label }} <span
-                                                        class="text-danger">*</span></label>
-                                            </div>
-                                        {% endfor %}
+                                        <div class="input-field col s12 m6">
+                                            <input id="from_date" name="from_date" type='text' class="form-control" required>
+                                            <label for="from_date">Start Date<span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="input-field col s12 m6">
+                                            <input id="to_date" name="to_date" type='text' class="form-control" required>
+                                            <label for="to_date">End Date<span class="text-danger">*</span></label>
+                                        </div>
                                     </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
                                     <div class="row">
                                         <div class="row">
                                             <div class="input-field col s12">
-                                                <a href="{% url 'items:StockListView' %}"
-                                                   class="btn waves-effect waves-light brown"><i
-                                                        class="mdi-content-clear left"></i>Cancel</a>
-                                                <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                        name="action">Submit
-                                                    <i class="mdi-content-send right"></i>
-                                                </button>
+                                                <button type="submit" name="pdf_export" class="btn teal waves-effect waves-light left">
+                                                    Export (.pdf)<i class="mdi-file-file-download left"></i></button>
+                                                <button type="submit" name="xls_export" class="btn lime darken-3 waves-effect waves-light right">
+                                                    Export (.xls)<i class="mdi-file-attachment left"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -70,7 +72,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(function () {
-            $("#datepicker").datepicker();
+            $("#from_date").datepicker();
+            $("#to_date").datepicker();
         });
     </script>
 

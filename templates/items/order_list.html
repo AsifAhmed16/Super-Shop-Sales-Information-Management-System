@@ -42,6 +42,7 @@
                             <th>S/L</th>
                             <th>Customer Name</th>
                             <th>Product</th>
+                            <th>Unit Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
                             <th>Order Date</th>
@@ -55,10 +56,17 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ each.customer.name }}</td>
                                 <td>{{ each.product.name }}</td>
+                                <td>{{ each.product.price }}</td>
                                 <td>{{ each.quantity }}</td>
                                 <td>{{ each.net_total }}</td>
-                                <td>{{ each.ordered_date }}</td>
-                                <td>{{ each.discount.name }}</td>
+                                <td>{{ each.ordered_date|date }}</td>
+                                <td>
+                                    {% if each.discount %}
+                                        {{ each.discount.name }} ({{ each.discount.rate }}%)
+                                    {% else %}
+                                        N/A (0%)
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <a href="{% url 'items:OrderUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>
                                     <a href="{% url 'items:OrderDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>

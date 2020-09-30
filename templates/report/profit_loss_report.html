@@ -1,0 +1,98 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div id="basic-form" class="section">
+                <div class="row">
+                    <div class="col s12 m12 l3"><p></p></div>
+                    <div class="col s12 m12 l6">
+                        <div class="card-panel">
+                            <h4 class="header2" style="text-align: center; vertical-align: middle; font-size: 140%;"><b>Profit-Loss Report</b></h4>
+                            <div class="divider"></div>
+                            <div class="row">
+                                <form action="{% url 'report:export_profit_loss_report' %}" class="col s12" method="post" enctype="multipart/form-data"
+                                      autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="input-field col s12 m6">
+                                            <select class="form-control" name="month" id="month" required style="font-size: 120%">
+                                                <option disabled value="" selected="selected">- - Select Month - -</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s12 m6">
+                                            <div class="form-group">
+                                                <input id="year" size="16" style="margin-top: 3px; font-size: 120%;" name="year" value="{% now "Y" %}" readonly class="date-own filter-status form-control" type="text" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <button type="submit" name="pdf_export" class="btn teal waves-effect waves-light left">
+                                                    Export (.pdf)<i class="mdi-file-file-download left"></i></button>
+                                                <button type="submit" name="xls_export" class="btn lime darken-3 waves-effect waves-light right">
+                                                    Export (.xls)<i class="mdi-file-attachment left"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link href="{% static '' %}css/year_pick/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static '' %}css/year_pick/bootstrap-datepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="{% static '' %}js/plugins/jquery-1.11.2.min.js"></script>
+    <script src="{% static '' %}js/year_pick/bootstrap.min.js"></script>
+    <script src="{% static '' %}js/year_pick/bootstrap-datepicker.js"></script>
+
+    <script>
+        $('.date-own').datepicker({
+            minViewMode: 2,
+            format: 'yyyy'
+        });
+    </script>
+
+{% endblock %}

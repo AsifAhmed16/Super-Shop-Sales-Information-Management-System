@@ -111,7 +111,7 @@
                 <li class="no-padding">
                     <ul class="collapsible collapsible-accordion">
                         <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i
-                                class="mdi-action-view-carousel"></i> Accounts</a>
+                                class="mdi-action-account-box"></i> Accounts</a>
                             <div class="collapsible-body">
                                 <ul>
                                     {% for url in request.session.urls %}
@@ -139,7 +139,7 @@
                 <li class="no-padding">
                     <ul class="collapsible collapsible-accordion">
                         <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i
-                                class="mdi-action-view-carousel"></i> Configuration</a>
+                                class="mdi-notification-sync-problem"></i> Configuration</a>
                             <div class="collapsible-body">
                                 <ul>
                                     {% for url in request.session.urls %}
@@ -157,16 +157,16 @@
                 <li class="no-padding">
                     <ul class="collapsible collapsible-accordion">
                         <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i
-                                class="mdi-action-view-carousel"></i> Items</a>
+                                class="mdi-action-shopping-cart"></i> Items</a>
                             <div class="collapsible-body">
                                 <ul>
                                     {% for url in request.session.urls %}
                                         {% if url == 'ProductListView' %}
                                             <li><a href="{% url 'items:ProductListView' %}">Product</a></li>
-{#                                        {% elif url == 'StockListView' %}#}
-{#                                            <li><a href="{% url 'items:StockListView' %}">Stock</a></li>#}
-{#                                        {% elif url == 'OrderListView' %}#}
-{#                                            <li><a href="{% url 'items:OrderListView' %}">Order</a></li>#}
+                                        {% elif url == 'StockListView' %}
+                                            <li><a href="{% url 'items:StockListView' %}">Stock</a></li>
+                                        {% elif url == 'OrderListView' %}
+                                            <li><a href="{% url 'items:OrderListView' %}">Order</a></li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
@@ -177,10 +177,15 @@
                 <li class="no-padding">
                     <ul class="collapsible collapsible-accordion">
                         <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i
-                                class="mdi-action-view-carousel"></i> Report</a>
+                                class="mdi-action-assignment"></i> Report</a>
                             <div class="collapsible-body">
                                 <ul>
-{#                                    <li><a href="{% url 'items:ProductListView' %}">Product</a></li>#}
+                                    <li><a href="{% url 'report:customer_report' %}">Customer</a></li>
+                                    <li><a href="{% url 'report:supplier_report' %}">Supplier</a></li>
+                                    <li><a href="{% url 'report:product_report' %}">Product</a></li>
+                                    <li><a href="{% url 'report:stock_report' %}">Stock</a></li>
+                                    <li><a href="{% url 'report:sales_report' %}">Sales</a></li>
+                                    <li><a href="{% url 'report:profit_loss_report' %}">Profit/Loss</a></li>
                                 </ul>
                             </div>
                         </li>

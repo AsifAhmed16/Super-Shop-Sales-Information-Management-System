@@ -1,10 +1,7 @@
-from django.contrib import messages
-from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 import hashlib
 from django.shortcuts import get_object_or_404
 from datetime import datetime
-from .models import *
 from .forms import *
 from .decorators import *
 

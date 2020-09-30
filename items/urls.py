@@ -15,11 +15,11 @@ urlpatterns = [
     path('stock/add/', StockCreateView.as_view(), name='StockCreateView'),
     path('stock/edit/<int:id>/', StockUpdateView, name='StockUpdateView'),
     path('stock/delete/<int:id>/', StockDeleteView, name='StockDeleteView'),
-    #
-    # # Order
-    # path('order/', OrderListView.as_view(), name='OrderListView'),
-    # path('order/add/', OrderCreateView.as_view(), name='OrderCreateView'),
-    # path('order/edit/<int:pk>/', OrderUpdateView.as_view(), name='OrderUpdateView'),
-    # path('order/delete/<int:id>/', OrderDeleteView, name='OrderDeleteView'),
+
+    # Order
+    path('order/', OrderListView.as_view(), name='OrderListView'),
+    path('order/add/', OrderCreateView.as_view(), name='OrderCreateView'),
+    path('order/edit/<int:pk>/', OrderUpdateView.as_view(), name='OrderUpdateView'),
+    path('order/delete/<int:id>/', OrderDeleteView, name='OrderDeleteView'),
 
 ]

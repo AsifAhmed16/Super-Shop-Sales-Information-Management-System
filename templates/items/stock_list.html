@@ -44,7 +44,9 @@
                             <th>Brand</th>
                             <th>Category</th>
                             <th>Size</th>
-                            <th>Price</th>
+                            <th>Sell Price</th>
+                            <th>Buying Price</th>
+                            <th>Quantity</th>
                             <th>Expiry Date</th>
                             <th>Action</th>
                         </tr>
@@ -53,12 +55,14 @@
                         {% for each in items %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ each.name }}</td>
-                                <td>{{ each.brand }}</td>
-                                <td>{{ each.category.name }}</td>
-                                <td>{{ each.size }}</td>
-                                <td>{{ each.price }}</td>
-                                <td>{{ each.expiry_date }}</td>
+                                <td>{{ each.product.name }}</td>
+                                <td>{{ each.product.brand }}</td>
+                                <td>{{ each.product.category.name }}</td>
+                                <td>{{ each.product.size }}</td>
+                                <td>{{ each.product.price }}</td>
+                                <td>{{ each.buying_price }}</td>
+                                <td>{{ each.quantity }}</td>
+                                <td>{{ each.expiry_date|date }}</td>
                                 <td>
                                     <a href="{% url 'items:StockUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>
                                     <a href="{% url 'items:StockDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>

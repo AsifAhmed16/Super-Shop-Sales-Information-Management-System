@@ -67,12 +67,12 @@ def ProductUpdateView(request, id):
             'username': request.session['username'],
             'urls': request.session['urls'],
         }
-        product_obj = get_object_or_404(Product, pk=id)
-        form = ProductForm(request.POST or None, instance=product_obj)
+        item_obj = get_object_or_404(Product, pk=id)
+        form = ProductForm(request.POST or None, instance=item_obj)
         context = dict()
         context['data'] = userdata
         context['form'] = form
-        img_text = product_obj.image
+        img_text = item_obj.image
         context['src_image'] = img_text.decode('utf-8')
         if request.method == 'POST' and id:
             if form.is_valid():
@@ -140,7 +140,7 @@ class StockCreateView(CreateView):
     def form_valid(self, form):
         if form.is_valid:
             item = form.save(commit=False)
-            item.image = self.request.POST['b64']
+            item.total_price = item.get_total()
             item.created_date = datetime.today()
             item.created_by = self.request.session['id']
             item.save()
@@ -160,22 +160,17 @@ def StockUpdateView(request, id):
             'username': request.session['username'],
             'urls': request.session['urls'],
         }
-        product_obj = get_object_or_404(Stock, pk=id)
-        form = StockForm(request.POST or None, instance=product_obj)
+        item_obj = get_object_or_404(Stock, pk=id)
+        form = StockForm(request.POST or None, instance=item_obj)
         context = dict()
         context['data'] = userdata
         context['form'] = form
-        img_text = product_obj.image
-        context['src_image'] = img_text.decode('utf-8')
         if request.method == 'POST' and id:
             if form.is_valid():
                 item = form.save(commit=False)
+                item.total_price = item.get_total()
                 item.updated_by = request.session['id']
                 item.updated_date = datetime.now()
-                if request.POST['b64'] != "":
-                    item.image = request.POST['b64']
-                else:
-                    item.image = img_text.decode('utf-8')
                 item.save()
                 messages.success(request, 'Data Successfully Updated')
                 return redirect('items:StockListView')
@@ -191,3 +186,94 @@ def StockDeleteView(request, id):
     Stock.objects.get(pk=id).delete()
     messages.error(request, 'Data Successfully Deleted')
     return redirect('items:StockListView')
+
+
+@method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
+@method_decorator(access_permission_required, name='dispatch')
+class OrderListView(ListView):
+    model = Order
+    template_name = 'items/order_list.html'
+    context_object_name = 'items'
+
+    def get_context_data(self, **kwargs):
+        userdata = {
+            'user_id': self.request.session['id'],
+            'username': self.request.session['username'],
+            'urls': self.request.session['urls'],
+        }
+        context = super(OrderListView, self).get_context_data(**kwargs)
+        context['data'] = userdata
+        return context
+
+
+@method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
+@method_decorator(access_permission_required, name='dispatch')
+class OrderCreateView(CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = 'items/order_form.html'
+    success_url = reverse_lazy('items:OrderListView')
+
+    def get_context_data(self, **kwargs):
+        userdata = {
+            'user_id': self.request.session['id'],
+            'username': self.request.session['username'],
+            'urls': self.request.session['urls'],
+        }
+        context = super(OrderCreateView, self).get_context_data(**kwargs)
+        context['data'] = userdata
+        context['form'] = self.form_class
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid:
+            item = form.save(commit=False)
+            item.net_total = item.get_total()
+            item.created_date = datetime.today()
+            item.created_by = self.request.session['id']
+            item.save()
+            messages.success(self.request, 'Data Successfully Saved')
+            return super(OrderCreateView, self).form_valid(form)
+        else:
+            messages.error(self.request, 'invalid')
+            return super(OrderCreateView, self).form_invalid(form)
+
+
+@method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
+@method_decorator(access_permission_required, name='dispatch')
+class OrderUpdateView(UpdateView):
+    model = Order
+    form_class = OrderForm
+    template_name = 'configuration/order_form.html'
+    success_url = reverse_lazy('configuration:OrderListView')
+
+    def get_context_data(self, **kwargs):
+        userdata = {
+            'user_id': self.request.session['id'],
+            'username': self.request.session['username'],
+            'urls': self.request.session['urls'],
+        }
+        context = super(OrderUpdateView, self).get_context_data(**kwargs)
+        context['data'] = userdata
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid:
+            item = form.save(commit=False)
+            item.net_total = item.get_total()
+            item.updated_date = datetime.today()
+            item.updated_by = self.request.session['id']
+            item.save()
+            messages.success(self.request, 'Data Successfully Updated')
+            return super(OrderUpdateView, self).form_valid(form)
+        else:
+            messages.error(self.request, 'invalid')
+            return super(OrderUpdateView, self).form_invalid(form)
+
+
+@login_required("logged_in", 'account:login')
+@access_permission_required
+def OrderDeleteView(request, id):
+    Order.objects.get(pk=id).delete()
+    messages.error(request, 'Data Successfully Deleted')
+    return redirect('items:OrderListView')

@@ -76,8 +76,7 @@
             </div>
         </div>
     </div>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script>
         function readFile() {
             if (this.files[0].type == "image/png" || this.files[0].type == "image/jpeg" || this.files[0].type == "image/gif") {
@@ -94,11 +93,7 @@
                 document.getElementById("pro_pic").value = "";
             }
         }
-
         document.getElementById("pro_pic").addEventListener("change", readFile);
-        $(function () {
-            $("#datepicker").datepicker();
-        });
     </script>
 
 {% endblock %}

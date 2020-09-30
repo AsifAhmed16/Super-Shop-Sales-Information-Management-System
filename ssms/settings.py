@@ -195,15 +195,19 @@ def log_setting():
         },
         'loggers': {
             'account': {
-                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'handlers': ['console', 'logfile', ],
+                'level': 'INFO',
+            },
+            'configuration': {
+                'handlers': ['console', 'logfile', ],
                 'level': 'INFO',
             },
             'items': {
-                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'handlers': ['console', 'logfile', ],
                 'level': 'INFO',
             },
             'report': {
-                'handlers': ['console', 'logfile', ],  # 'elasticsearch'
+                'handlers': ['console', 'logfile', ],
                 'level': 'INFO',
             },
             'django': {

@@ -74,7 +74,7 @@
                     <div id="input-select" class="row margin">
                         <div class="input-field col s12">
                             <i class="mdi-social-person-outline prefix"></i>
-                            <select style="margin-left:5em" class="browser-default col s8" id="role" name="role" required>
+                            <select style="margin-left:5em" class="select browser-default col s8" id="role" name="role" required>
                                 <option disabled selected value>pick a role</option>
                                 {% for role in roles_list %}
                                     <option value="{{ role.id }}">{{ role.name }}</option>

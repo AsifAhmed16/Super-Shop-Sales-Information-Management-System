@@ -12,13 +12,12 @@ SIZE_CHOICES = (
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    brand = models.CharField(max_length=20, blank=True, null=True)
-    price = models.FloatField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    brand = models.CharField(max_length=20, blank=True, null=True)
+    size = models.CharField(choices=SIZE_CHOICES, max_length=6)
+    price = models.FloatField()
     description = models.TextField(blank=True, null=True)
     image = models.FileField(null=True, blank=True)
-    size = models.CharField(choices=SIZE_CHOICES, max_length=6)
-    expiry_date = models.DateTimeField()
     created_by = models.IntegerField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_by = models.IntegerField(blank=True, null=True)
@@ -33,15 +32,12 @@ class Product(models.Model):
 
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    brand = models.CharField(max_length=20, blank=True, null=True)
-    unit_price = models.FloatField()
-    quantity = models.IntegerField()
-    description = models.TextField(blank=True, null=True)
-    image = models.FileField(null=True, blank=True)
-    size = models.CharField(choices=SIZE_CHOICES, max_length=6)
     expiry_date = models.DateTimeField(blank=True, null=True)
+    buying_price = models.FloatField()
+    quantity = models.IntegerField()
+    total_price = models.FloatField()
+    description = models.TextField(blank=True, null=True)
     created_by = models.IntegerField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_by = models.IntegerField(blank=True, null=True)
@@ -49,6 +45,10 @@ class Stock(models.Model):
 
     def __str__(self):
         return self.product.name
+
+    def get_total(self):
+        total = self.buying_price * self.quantity
+        return total
 
     class Meta:
         db_table = 'I_STOCK'
@@ -60,7 +60,7 @@ class Order(models.Model):
     quantity = models.IntegerField()
     net_total = models.FloatField()
     ref_code = models.CharField(max_length=20, blank=True, null=True)
-    ordered_date = models.DateTimeField()
+    ordered_date = models.DateField()
     shipping_address = models.CharField(max_length=100, blank=True, null=True)
     billing_address = models.CharField(max_length=100, blank=True, null=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
