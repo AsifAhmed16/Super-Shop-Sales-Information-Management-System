@@ -64,7 +64,6 @@
                                 <td>{{ each.quantity }}</td>
                                 <td>{{ each.expiry_date|date }}</td>
                                 <td>
-                                    <a href="{% url 'items:StockUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>
                                     <a href="{% url 'items:StockDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
                                 </td>
                             </tr>

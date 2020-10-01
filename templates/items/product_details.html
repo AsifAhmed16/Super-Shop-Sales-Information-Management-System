@@ -1,0 +1,147 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'error' %}
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
+                    </div>
+                {% elif message.level_tag == 'success' %}
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div id="basic-form" class="section">
+                <div class="row">
+                    <div class="col s12 m12 l3"><p></p></div>
+                    <div class="col s12 m12 l6">
+                        <div class="card-panel">
+                            <h4 class="header2">Product Details</h4>
+                            <div class="divider"></div>
+                            <div class="row">
+                                <form action="" class="col s12" method="post" enctype="multipart/form-data"
+                                      autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="row">
+
+                                        <div id="multi-color-tab" class="section">
+                                            <h4 class="header">{{ item.name }}</h4>
+                                            <div class="row">
+                                                <div class="col s12 m6 l5">
+                                                    <img id="img" src="{{ src_image }}" height="100"
+                                                         style="float: right">
+                                                </div>
+                                                <div class="col s12 m6 l7">
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <ul class="tabs tab-demo-active z-depth-1">
+                                                                <li class="tab col s3"><a
+                                                                        class="white-text purple darken-1 waves-effect waves-light active"
+                                                                        href="#general_info"><i
+                                                                        class="mdi-action-settings-display"></i> General</a>
+                                                                </li>
+                                                                <li class="tab col s3"><a
+                                                                        class="white-text light-blue lighten-1 waves-effect waves-light"
+                                                                        href="#stock_info"><i
+                                                                        class="mdi-action-speaker-notes"></i> Stock</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col s12">
+                                                            <div id="general_info" class="col s12  purple lighten-3">
+                                                                <dl>
+                                                                    <dt><b style="color: #0e2e42">Category</b></dt>
+                                                                    <dd>{{ item.category }}</dd>
+                                                                    <dt><b style="color: #0e2e42">Brand</b></dt>
+                                                                    <dd>{{ item.brand }}</dd>
+                                                                    <dt><b style="color: #0e2e42">Size</b></dt>
+                                                                    <dd>{{ item.size }}</dd>
+                                                                    <dt><b style="color: #0e2e42">Unit Price</b></dt>
+                                                                    <dd>{{ item.price }}</dd>
+                                                                    <dt><b style="color: #0e2e42">Product Left</b></dt>
+                                                                    <dd id="quantity_left"><span>{{ item.quantity_left }}</span></dd>
+                                                                    <dt><b style="color: #0e2e42">Description</b></dt>
+                                                                    <dd>
+                                                                        {% if item.description %}
+                                                                            {{ item.description }}
+                                                                        {% else %}
+                                                                            ...
+                                                                        {% endif %}
+                                                                    </dd>
+                                                                </dl>
+                                                            </div>
+                                                            <div id="stock_info" class="col s12  light-blue lighten-1">
+                                                                <dt><b style="color: #0e2e42">Latest Supplier</b></dt>
+                                                                <dd>{{ stock_item.supplier.name }}</dd>
+                                                                <dt><b style="color: #0e2e42">Supplier's Phone</b></dt>
+                                                                <dd>{{ stock_item.supplier.phone }}</dd>
+                                                                <dt><b style="color: #0e2e42">Expiry Date</b></dt>
+                                                                <dd>
+                                                                    {% if stock_item.expiry_date %}
+                                                                        {{ stock_item.expiry_date|date }}
+                                                                    {% else %}
+                                                                        ...
+                                                                    {% endif %}
+                                                                </dd>
+                                                                <dt><b style="color: #0e2e42">Buying Price</b></dt>
+                                                                <dd>{{ stock_item.buying_price }}</dd>
+                                                                <dt><b style="color: #0e2e42">Description</b></dt>
+                                                                <dd>
+                                                                    {% if stock_item.description %}
+                                                                        {{ stock_item.description }}
+                                                                    {% else %}
+                                                                        ...
+                                                                    {% endif %}
+                                                                </dd>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <a href="{% url 'account:index' %}"
+                                                   class="btn waves-effect waves-light deep-orange"><i
+                                                        class="mdi-content-clear left"></i>Go Back</a>
+                                                <a href="{% url 'items:OrderCreate' item.id %}"
+                                                   class="btn indigo waves-effect waves-light right" id="order_button"><i
+                                                        class="mdi-content-send right"></i>Order Product</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            var quantity_left = Number($("#quantity_left span").text());
+            if(quantity_left<=0){
+                $("#order_button").prop('disabled', true);
+            }
+        })
+    </script>
+
+{% endblock %}

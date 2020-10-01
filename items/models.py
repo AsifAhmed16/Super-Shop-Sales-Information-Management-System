@@ -16,6 +16,7 @@ class Product(models.Model):
     brand = models.CharField(max_length=20, blank=True, null=True)
     size = models.CharField(choices=SIZE_CHOICES, max_length=6)
     price = models.FloatField()
+    quantity_left = models.IntegerField(default=0)
     description = models.TextField(blank=True, null=True)
     image = models.FileField(null=True, blank=True)
     created_by = models.IntegerField(blank=True, null=True)
@@ -24,7 +25,7 @@ class Product(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.name + " (" + self.size + ")"
 
     class Meta:
         db_table = 'I_PRODUCT'
@@ -55,8 +56,8 @@ class Stock(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField()
     net_total = models.FloatField()
     ref_code = models.CharField(max_length=20, blank=True, null=True)

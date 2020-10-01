@@ -29,16 +29,20 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2" style="text-align: center; vertical-align: middle; font-size: 140%;"><b>Profit-Loss Report</b></h4>
+                            <h4 class="header2" style="text-align: center; vertical-align: middle; font-size: 140%;"><b>Profit-Loss
+                                Report</b></h4>
                             <div class="divider"></div>
                             <div class="row">
-                                <form action="{% url 'report:export_profit_loss_report' %}" class="col s12" method="post" enctype="multipart/form-data"
+                                <form action="{% url 'report:export_profit_loss_report' %}" class="col s12"
+                                      method="post" enctype="multipart/form-data"
                                       autocomplete="off">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="input-field col s12 m6">
-                                            <select class="form-control" name="month" id="month" required style="font-size: 120%">
-                                                <option disabled value="" selected="selected">- - Select Month - -</option>
+                                            <select class="form-control" name="month" id="month" required
+                                                    style="font-size: 120%">
+                                                <option disabled value="" selected="selected">- - Select Month - -
+                                                </option>
                                                 <option value="1">January</option>
                                                 <option value="2">February</option>
                                                 <option value="3">March</option>
@@ -55,7 +59,10 @@
                                         </div>
                                         <div class="input-field col s12 m6">
                                             <div class="form-group">
-                                                <input id="year" size="16" style="margin-top: 3px; font-size: 120%;" name="year" value="{% now "Y" %}" readonly class="date-own filter-status form-control" type="text" autocomplete="off">
+                                                <input id="year" size="16" style="margin-top: 3px; font-size: 120%;"
+                                                       name="year" value="{% now "Y" %}" readonly
+                                                       class="date-own filter-status form-control" type="text"
+                                                       autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
@@ -66,9 +73,11 @@
                                     <div class="row">
                                         <div class="row">
                                             <div class="input-field col s12">
-                                                <button type="submit" name="pdf_export" class="btn teal waves-effect waves-light left">
+                                                <button type="submit" name="pdf_export"
+                                                        class="btn teal waves-effect waves-light left">
                                                     Export (.pdf)<i class="mdi-file-file-download left"></i></button>
-                                                <button type="submit" name="xls_export" class="btn lime darken-3 waves-effect waves-light right">
+                                                <button type="submit" name="xls_export"
+                                                        class="btn lime darken-3 waves-effect waves-light right">
                                                     Export (.xls)<i class="mdi-file-attachment left"></i></button>
                                             </div>
                                         </div>
@@ -84,6 +93,28 @@
 
     <link href="{% static '' %}css/year_pick/bootstrap.min.css" rel="stylesheet">
     <link href="{% static '' %}css/year_pick/bootstrap-datepicker.css" rel="stylesheet">
+
+    <style>
+        #search_btn {
+            position: absolute !important;
+            margin-top: 2px !important;
+            margin-left: -100px !important;
+        }
+
+        nav ul a {
+            font-size: 1.5rem !important;
+        }
+
+        .translation-button img {
+            top: 0 !important;
+        }
+
+        nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
+            display: block !important;
+            font-size: 2.5rem !important;
+        }
+    </style>
+
     <script type="text/javascript" src="{% static '' %}js/plugins/jquery-1.11.2.min.js"></script>
     <script src="{% static '' %}js/year_pick/bootstrap.min.js"></script>
     <script src="{% static '' %}js/year_pick/bootstrap-datepicker.js"></script>

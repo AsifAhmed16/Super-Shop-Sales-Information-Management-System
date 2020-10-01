@@ -25,7 +25,7 @@
         <div class="section">
             <p class="caption">
                 {% if data.language == "Eng" %}
-                    Welcome to Super-shop Sales management System (SSMS) - <span style="color: purple">{{ data.username }}</span>. SSMS is a e-commerce web application
+                    Welcome to Super Shop Sales management System (SSMS) - <span style="color: purple">{{ data.username }}</span>. SSMS is a e-commerce web application
                     and a web admin panel to manage a super shop sales with detailed reports.
                 {% else %}
                     Tervetuloa että SSMS - {{ data.username }}. SSMS on verkkosovellus ja verkkopalvelu huutokauppojen
@@ -75,26 +75,34 @@
                                     </div>
                                 </div>
                                 <div class="card-content">
-                                    <ul class="collection" style="background-color: white">
-                                        <li class="collection-item">
-                                            {% if data.language == "Eng" %}
-                                                Description
-                                            {% else %}
-                                                Kuvaus
-                                            {% endif %}
-                                            - <br>
-                                            {{ each.description }}
-                                        </li>
-                                        <br>
-                                        <br>
-                                        <br>
-                                    </ul>
+                                    <div class="row">
+                                        <div class="col s12 m12 l12">
+                                            <div class="card-panel grey lighten-5 z-depth-1">
+                                                <div class="row valign-wrapper">
+                                                    <div class="col s6 m4">
+                                                        <img src="{% static '' %}images/yaas-1.jpeg" alt=""
+                                                             class="circle responsive-img valign">
+                                                    </div>
+                                                    <div class="col s6 m8">
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-action center-align">
                                     <a href="#"
                                        class="waves-effect waves-light btn green">
                                         {% if data.language == "Eng" %}
-                                            Make a Bid
+                                            View Details
                                         {% else %}
                                             Tee tarjous
                                         {% endif %}
@@ -102,7 +110,7 @@
                                     <a href="#"
                                        class="waves-effect waves-light btn red">
                                         {% if data.language == "Eng" %}
-                                            Ban Auction
+                                            Order Now
                                         {% else %}
                                             Kieltää huutokauppa
                                         {% endif %}

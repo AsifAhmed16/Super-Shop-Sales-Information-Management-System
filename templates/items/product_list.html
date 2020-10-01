@@ -44,6 +44,7 @@
                             <th>Brand</th>
                             <th>Category</th>
                             <th>Size</th>
+                            <th>Quantity Left</th>
                             <th>Price</th>
                             <th>Action</th>
                         </tr>
@@ -56,8 +57,10 @@
                                 <td>{{ each.brand }}</td>
                                 <td>{{ each.category.name }}</td>
                                 <td>{{ each.size }}</td>
+                                <td>{{ each.quantity_left }}</td>
                                 <td>{{ each.price }}</td>
                                 <td>
+                                    <a href="{% url 'items:ProductDetailsView' each.id %}" class="btn-floating waves-effect waves-light indigo"><i class="mdi-action-view-list"></i></a>
                                     <a href="{% url 'items:ProductUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>
                                     <a href="{% url 'items:ProductDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
                                 </td>

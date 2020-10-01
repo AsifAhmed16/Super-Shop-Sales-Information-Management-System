@@ -6,7 +6,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
-        exclude = ('image', 'created_by', 'created_date', 'updated_by', 'updated_date',)
+        exclude = ('quantity_left', 'image', 'created_by', 'created_date', 'updated_by', 'updated_date',)
         widgets = {
             "name": forms.TextInput(attrs={'class': 'form-control'}, ),
             "brand": forms.TextInput(attrs={'class': 'form-control'}, ),
@@ -38,8 +38,8 @@ class OrderForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('net_total', 'created_by', 'created_date', 'updated_by', 'updated_date')
         widgets = {
-            "customer": forms.Select(attrs={'class': 'select '}),
             "product": forms.Select(attrs={'class': 'select '}),
+            "customer": forms.Select(attrs={'class': 'select '}),
             "quantity": forms.NumberInput(attrs={'class': 'form-control'}, ),
             "ref_code": forms.TextInput(attrs={'class': 'form-control'}, ),
             "ordered_date": forms.DateInput(attrs={'class': 'form-control', 'type': 'text', 'id': 'datepicker'}),

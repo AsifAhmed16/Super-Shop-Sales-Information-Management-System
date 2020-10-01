@@ -35,6 +35,13 @@
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data"
                                       autocomplete="off">
                                     {% csrf_token %}
+                                    <div class="input-field col s12" id="img_div">
+                                        <br>
+                                        <br>
+                                        <img id="img" src="{{ src_image }}" height="100">
+                                        <br>
+                                        <br>
+                                    </div>
                                     <div class="row">
                                         {% for field in form %}
                                             <div class="input-field col s12">
@@ -68,7 +75,34 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script>
+        $(document).ready(function () {
+            $('#img_div').hide();
+            if (document.getElementById("img").src != "") {
+                $('#img_div').show();
+            }
+        });
+
+        $('#id_product').on('change', function () {
+            var product_id = $('#id_product').val();
+            if (product_id != "") {
+                $.ajax({
+                    url: '/items/check_img/' + product_id + '/',
+                    type: 'post',
+                    data: {depart: product_id},
+                    dataType: 'json',
+                    success: function (response) {
+                        document.getElementById("img").src = response['code'];
+                        $('#img_div').show();
+                    }
+                });
+            }
+            else {
+                $('#img_div').hide();
+            }
+        });
+
         $(function () {
             $("#datepicker").datepicker();
         });
