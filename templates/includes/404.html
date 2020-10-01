@@ -1,9 +1,15 @@
 {% extends 'includes/base.html' %}
 {% block content %}
 
-<div class="container">
-  <h1>Error 404 - User does not have any access to that page or action. </h1>
-  <hr>
-</div>
+    <div class="container">
+        <h1>
+            {% if data.language == "Eng" %}
+                Error 404 - User does not have any access to that page or action.
+            {% else %}
+                ইরর ৪০৪ - ব্যবহারকারীর এই পেইজ একসেস করার অনুমতি নেই
+            {% endif %}
+        </h1>
+        <hr>
+    </div>
 
 {% endblock %}

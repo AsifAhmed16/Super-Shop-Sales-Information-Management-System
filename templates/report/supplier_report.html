@@ -29,19 +29,38 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2" style="text-align: center; vertical-align: middle;"><b>Supplier Report</b></h4>
+                            <h4 class="header2" style="text-align: center; vertical-align: middle;"><b>
+                                {% if data.language == "Eng" %}
+                                    Supplier Report
+                                {% else %}
+                                    সাপলাইয়ার রিপোর্ট
+                                {% endif %}
+                            </b></h4>
                             <div class="divider"></div>
                             <div class="row">
-                                <form action="{% url 'report:export_supplier_report' %}" class="col s12" method="post" enctype="multipart/form-data"
+                                <form action="{% url 'report:export_supplier_report' %}" class="col s12" method="post"
+                                      enctype="multipart/form-data"
                                       autocomplete="off">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="row">
                                             <div class="input-field col s12">
-                                                <button type="submit" name="pdf_export" class="btn teal waves-effect waves-light left">
-                                                    Export (.pdf)<i class="mdi-file-file-download left"></i></button>
-                                                <button type="submit" name="xls_export" class="btn lime darken-3 waves-effect waves-light right">
-                                                    Export (.xls)<i class="mdi-file-attachment left"></i></button>
+                                                <button type="submit" name="pdf_export"
+                                                        class="btn teal waves-effect waves-light left">
+                                                    {% if data.language == "Eng" %}
+                                                        Export (.pdf)
+                                                    {% else %}
+                                                        পি ডি এফ
+                                                    {% endif %}
+                                                    <i class="mdi-file-file-download left"></i></button>
+                                                <button type="submit" name="xls_export"
+                                                        class="btn lime darken-3 waves-effect waves-light right">
+                                                    {% if data.language == "Eng" %}
+                                                        Export (.xls)
+                                                    {% else %}
+                                                        এক্স এল
+                                                    {% endif %}
+                                                    <i class="mdi-file-attachment left"></i></button>
                                             </div>
                                         </div>
                                     </div>

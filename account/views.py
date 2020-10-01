@@ -4,17 +4,38 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime
 from .forms import *
 from .decorators import *
+from items.models import Product
 
 
 @login_required("logged_in", 'account:login')
 def index(request):
-    display = None
+    items = Product.objects.all()
+    display = [{
+        'id': x.id,
+        'name': x.name,
+        'price': x.price,
+        'category': x.category.name,
+        'brand': x.brand,
+        'size': x.size,
+        'image': (x.image).decode('utf-8'),
+    } for x in items]
     context = dict()
     context['display'] = display
     lang = "Eng"
     if request.method == 'POST':
-        display = display.filter(title__icontains=request.POST['Search'])
+        items = Product.objects.all()
+        items = items.filter(name__icontains=request.POST['Search'])
+        display = [{
+            'id': x.id,
+            'name': x.name,
+            'price': x.price,
+            'category': x.category.name,
+            'brand': x.brand,
+            'size': x.size,
+            'image': (x.image).decode('utf-8'),
+        } for x in items]
         context['display'] = display
+        context['search_text'] = request.POST['Search']
         if request.POST['language']:
             request.session['language'] = request.POST['language']
             userdata = {
@@ -42,7 +63,6 @@ def index(request):
                 'language': lang,
             }
             context['data'] = userdata
-            return render(request, 'account/home.html', context)
     return render(request, 'account/home.html', context)
 
 
@@ -77,7 +97,7 @@ def login_validate(request):
             if request.session['language'] == "Eng":
                     messages.error(request, 'Username Mismatched')
             else:
-                messages.error(request, 'Käyttäjätunnus Ristiriitaiset')
+                messages.error(request, 'ব্যবহারকারী আইডি মিলছে না')
             return redirect('account:login')
         else:
             if user.password == password:
@@ -99,7 +119,7 @@ def login_validate(request):
                 if request.session['language'] == "Eng":
                     messages.error(request, 'Wrong Password')
                 else:
-                    messages.error(request, 'Väärin Salasana')
+                    messages.error(request, 'ভুল গোপন নম্বর')
                 return redirect('account:login')
     return render(request, 'account/login.html')
 
@@ -132,33 +152,33 @@ def register(request):
             if request.session['language'] == "Eng":
                 messages.error(request, 'Password Mismatched. Try Again')
             else:
-                messages.error(request, 'Salasana Ristiriitaiset. Yritä Uudelleen')
+                messages.error(request, 'পাসওয়ার্ড মেলেনি. আবার চেষ্টা করুন')
             return render(request, 'account/register.html')
         try:
             if Users.objects.filter(username=username).exists():
                 if request.session['language'] == "Eng":
                     messages.error(request, 'That username is already taken.')
                 else:
-                    messages.error(request, 'Tämä käyttäjätunnus on jo varattu.')
+                    messages.error(request, 'এই ব্যবহারকারীর নামটি ইতিমধ্যে নেওয়া হয়েছে')
                 return render(request, 'account/register.html')
             if Users.objects.filter(email=email).exists():
                 if request.session['language'] == "Eng":
                     messages.error(request, 'That email id is already taken.')
                 else:
-                    messages.error(request, 'Tämä sähköpostiosoite on jo otettu.')
+                    messages.error(request, 'এই ইমেলটি ইতিমধ্যে নেওয়া হয়েছে')
                 return render(request, 'account/register.html')
             password = hashlib.sha256(password.encode('utf-8')).hexdigest()
             Users.objects.create(username=username, password=password, email=email, name=name, location=location, phone=phone, role=role, is_active=1, language=request.session['language'])
             if request.session['language'] == "Eng":
                 messages.success(request, 'Registration Complete.')
             else:
-                messages.success(request, 'Rekisteröinti valmis.')
+                messages.success(request, 'নিবন্ধন সম্পন্ন.')
         except Exception as ex:
             print(ex)
             if request.session['language'] == "Eng":
                 messages.error(request, 'Sorry !!! Something Went Wrong.')
             else:
-                messages.error(request, 'Anteeksi !!! Jotain Meni Pieleen.')
+                messages.error(request, 'দুঃখিত !!! কিছু ভুল হয়েছে')
             return render(request, 'account/register.html')
         return redirect('account:login')
     else:
@@ -178,6 +198,8 @@ def users_list(request):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         users = Users.objects.all().order_by('name')
         context = {
@@ -208,6 +230,7 @@ def roles_list(request):
             'user_id': request.session['id'],
             'username': request.session['username'],
             'language': language,
+            'urls': request.session['urls'],
         }
         roles = Role.objects.all()
         context = {
@@ -228,6 +251,7 @@ def roles_process(request, id=None):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
             'urls': request.session['urls'],
         }
         context = dict()
@@ -287,6 +311,7 @@ def customer_list(request):
             'user_id': request.session['id'],
             'username': request.session['username'],
             'language': language,
+            'urls': request.session['urls'],
         }
         items = Customer.objects.all()
         context = {
@@ -307,6 +332,8 @@ def customer_process(request, id=None):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         context = dict()
         context['data'] = userdata
@@ -365,6 +392,7 @@ def supplier_list(request):
             'user_id': request.session['id'],
             'username': request.session['username'],
             'language': language,
+            'urls': request.session['urls'],
         }
         items = Supplier.objects.all()
         context = {
@@ -385,6 +413,8 @@ def supplier_process(request, id=None):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         context = dict()
         context['data'] = userdata
@@ -437,7 +467,10 @@ def supplier_delete(request, id):
 def menus_list(request):
     try:
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         items = Menu.objects.all().order_by('name')
         context = {
@@ -456,7 +489,10 @@ def menus_process(request, id=None):
     try:
         form = MenusForm
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         context = {
             'data': userdata,
@@ -510,7 +546,10 @@ def menus_delete(request, id):
 def modules_list(request):
     try:
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         items = Module.objects.all().order_by('menu')
         context = {
@@ -529,7 +568,10 @@ def modules_process(request, id=None):
     try:
         form = ModulesForm
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         context = {
             'data': userdata,
@@ -583,7 +625,10 @@ def modules_delete(request, id):
 def urls_list(request):
     try:
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         items = URL.objects.all().order_by('module_id')
         context = {
@@ -602,7 +647,10 @@ def urls_process(request, id=None):
     try:
         form = URLSForm
         userdata = {
+            'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         context = {
             'data': userdata,
@@ -658,6 +706,8 @@ def privilege_list(request, id):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
         menus = Menu.objects.all()
         modules = Module.objects.all()

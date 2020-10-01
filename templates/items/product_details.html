@@ -29,7 +29,13 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2">Product Details</h4>
+                            <h4 class="header2">
+                                {% if data.language == "Eng" %}
+                                    Product Details
+                                {% else %}
+                                    পণ্য বিবরণ
+                                {% endif %}
+                            </h4>
                             <div class="divider"></div>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data"
@@ -72,7 +78,8 @@
                                                                     <dt><b style="color: #0e2e42">Unit Price</b></dt>
                                                                     <dd>{{ item.price }}</dd>
                                                                     <dt><b style="color: #0e2e42">Product Left</b></dt>
-                                                                    <dd id="quantity_left"><span>{{ item.quantity_left }}</span></dd>
+                                                                    <dd id="quantity_left">
+                                                                        <span>{{ item.quantity_left }}</span></dd>
                                                                     <dt><b style="color: #0e2e42">Description</b></dt>
                                                                     <dd>
                                                                         {% if item.description %}
@@ -118,10 +125,23 @@
                                             <div class="input-field col s12">
                                                 <a href="{% url 'account:index' %}"
                                                    class="btn waves-effect waves-light deep-orange"><i
-                                                        class="mdi-content-clear left"></i>Go Back</a>
+                                                        class="mdi-content-clear left"></i>
+                                                    {% if data.language == "Eng" %}
+                                                        Go Home
+                                                    {% else %}
+                                                        হোম পেইজ
+                                                    {% endif %}
+                                                </a>
                                                 <a href="{% url 'items:OrderCreate' item.id %}"
-                                                   class="btn indigo waves-effect waves-light right" id="order_button"><i
-                                                        class="mdi-content-send right"></i>Order Product</a>
+                                                   class="btn indigo waves-effect waves-light right"
+                                                   id="order_button"><i
+                                                        class="mdi-content-send right"></i>
+                                                    {% if data.language == "Eng" %}
+                                                        Order Product
+                                                    {% else %}
+                                                        অর্ডার করুন
+                                                    {% endif %}
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -138,7 +158,7 @@
     <script>
         $(document).ready(function () {
             var quantity_left = Number($("#quantity_left span").text());
-            if(quantity_left<=0){
+            if (quantity_left <= 0) {
                 $("#order_button").prop('disabled', true);
             }
         })

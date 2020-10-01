@@ -29,7 +29,13 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2">URL Form</h4>
+                            <h4 class="header2">
+                                {% if data.language == "Eng" %}
+                                    URL Form
+                                {% else %}
+                                    ইউআরএল ফর্ম
+                                {% endif %}
+                            </h4>
                             <div class="divider"></div>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data"
@@ -48,10 +54,20 @@
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <a href="{% url 'account:urls_list' %}"
-                                                   class="btn waves-effect waves-light brown"><i
-                                                        class="mdi-content-clear left"></i>Cancel</a>
+                                                   class="btn waves-effect waves-light brown"></i>
+                                                    {% if data.language == "Eng" %}
+                                                        Cancel
+                                                    {% else %}
+                                                        বাতিল করুন
+                                                    {% endif %}
+                                                </a>
                                                 <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                        name="action">Submit
+                                                        name="action">
+                                                    {% if data.language == "Eng" %}
+                                                        Submit
+                                                    {% else %}
+                                                        দাখিল করুন
+                                                    {% endif %}
                                                     <i class="mdi-content-send right"></i>
                                                 </button>
                                             </div>

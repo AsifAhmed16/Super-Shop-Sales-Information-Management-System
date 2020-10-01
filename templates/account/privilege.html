@@ -24,7 +24,13 @@
 
     <div class="container">
         <div id="basic-tabs" class="section">
-            <h4 class="header">User Privileges</h4>
+            <h4 class="header">
+                {% if data.language == "Eng" %}
+                    User Privileges
+                {% else %}
+                    ইউজার প্রিভিলেজ
+                {% endif %}
+            </h4>
             <div class="row">
                 <form action="" class="col s12" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -67,7 +73,7 @@
                                                                                value="{{ url.menu_id }},{{ url.module_id }},{{ url.id }}"
                                                                                 {% for every in privileges %}
                                                                                     {% if every.url_id == url.id %}
-                                                                                        checked
+                                                                               checked
                                                                                     {% endif %}
                                                                                 {% endfor %}
                                                                         >
@@ -94,10 +100,20 @@
                         <div class="row">
                             <div class="input-field col s12">
                                 <a href="{% url 'account:users_list' %}"
-                                   class="btn waves-effect waves-light brown"><i
-                                        class="mdi-content-clear left"></i>Cancel</a>
+                                   class="btn waves-effect waves-light brown"></i>
+                                    {% if data.language == "Eng" %}
+                                        Cancel
+                                    {% else %}
+                                        বাতিল করুন
+                                    {% endif %}
+                                </a>
                                 <button class="btn cyan waves-effect waves-light right" type="submit"
-                                        name="action">Submit
+                                        name="action">
+                                    {% if data.language == "Eng" %}
+                                        Submit
+                                    {% else %}
+                                        দাখিল করুন
+                                    {% endif %}
                                     <i class="mdi-content-send right"></i>
                                 </button>
                             </div>

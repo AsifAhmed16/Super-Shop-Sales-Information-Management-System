@@ -17,6 +17,7 @@ class CategoryListView(ListView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(CategoryListView, self).get_context_data(**kwargs)
@@ -36,6 +37,7 @@ class CategoryCreateView(CreateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(CategoryCreateView, self).get_context_data(**kwargs)
@@ -68,6 +70,7 @@ class CategoryUpdateView(UpdateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(CategoryUpdateView, self).get_context_data(**kwargs)
@@ -106,6 +109,7 @@ class DiscountListView(ListView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(DiscountListView, self).get_context_data(**kwargs)
@@ -125,6 +129,7 @@ class DiscountCreateView(CreateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(DiscountCreateView, self).get_context_data(**kwargs)
@@ -157,6 +162,7 @@ class DiscountUpdateView(UpdateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(DiscountUpdateView, self).get_context_data(**kwargs)

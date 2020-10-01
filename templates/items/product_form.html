@@ -29,7 +29,13 @@
                     <div class="col s12 m12 l3"><p></p></div>
                     <div class="col s12 m12 l6">
                         <div class="card-panel">
-                            <h4 class="header2">Product Form</h4>
+                            <h4 class="header2">
+                                {% if data.language == "Eng" %}
+                                    Product Form
+                                {% else %}
+                                    পণ্য ফর্ম
+                                {% endif %}
+                            </h4>
                             <div class="divider"></div>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data"
@@ -44,7 +50,13 @@
                                             </div>
                                         {% endfor %}
                                         <div class="input-field col s12">
-                                            <label>Product Image</label>
+                                            <label>
+                                                {% if data.language == "Eng" %}
+                                                    Product Image
+                                                {% else %}
+                                                    ছবি
+                                                {% endif %}
+                                            </label>
                                             <br>
                                             <br>
                                             <input id="pro_pic" name="pro_pic" type='file' class="form-control">
@@ -60,9 +72,20 @@
                                             <div class="input-field col s12">
                                                 <a href="{% url 'items:ProductListView' %}"
                                                    class="btn waves-effect waves-light brown"><i
-                                                        class="mdi-content-clear left"></i>Cancel</a>
+                                                        class="mdi-content-clear left"></i>
+                                                    {% if data.language == "Eng" %}
+                                                        Cancel
+                                                    {% else %}
+                                                        বাতিল করুন
+                                                    {% endif %}
+                                                </a>
                                                 <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                        name="action">Submit
+                                                        name="action">
+                                                    {% if data.language == "Eng" %}
+                                                        Submit
+                                                    {% else %}
+                                                        দাখিল করুন
+                                                    {% endif %}
                                                     <i class="mdi-content-send right"></i>
                                                 </button>
                                             </div>
@@ -93,6 +116,7 @@
                 document.getElementById("pro_pic").value = "";
             }
         }
+
         document.getElementById("pro_pic").addEventListener("change", readFile);
     </script>
 

@@ -20,6 +20,7 @@ class ProductListView(ListView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(ProductListView, self).get_context_data(**kwargs)
@@ -39,6 +40,7 @@ class ProductCreateView(CreateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(ProductCreateView, self).get_context_data(**kwargs)
@@ -70,6 +72,7 @@ def ProductDetailsView(request, id):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
             'urls': request.session['urls'],
         }
         item_obj = get_object_or_404(Product, pk=id)
@@ -109,6 +112,7 @@ def ProductUpdateView(request, id):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
             'urls': request.session['urls'],
         }
         item_obj = get_object_or_404(Product, pk=id)
@@ -160,6 +164,7 @@ class StockListView(ListView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(StockListView, self).get_context_data(**kwargs)
@@ -179,6 +184,7 @@ class StockCreateView(CreateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(StockCreateView, self).get_context_data(**kwargs)
@@ -231,12 +237,12 @@ class StockCreateView(CreateView):
 #         return redirect('items:StockListView')
 
 
-@login_required("logged_in", 'account:login')
-@access_permission_required
-def StockDeleteView(request, id):
-    Stock.objects.get(pk=id).delete()
-    messages.error(request, 'Data Successfully Deleted')
-    return redirect('items:StockListView')
+# @login_required("logged_in", 'account:login')
+# @access_permission_required
+# def StockDeleteView(request, id):
+#     Stock.objects.get(pk=id).delete()
+#     messages.error(request, 'Data Successfully Deleted')
+#     return redirect('items:StockListView')
 
 
 @method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
@@ -250,6 +256,7 @@ class OrderListView(ListView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(OrderListView, self).get_context_data(**kwargs)
@@ -264,6 +271,7 @@ def OrderCreate(request, id):
         userdata = {
             'user_id': request.session['id'],
             'username': request.session['username'],
+            'language': request.session['language'],
             'urls': request.session['urls'],
         }
         item_obj = get_object_or_404(Product, pk=id)
@@ -308,6 +316,7 @@ class OrderCreateView(CreateView):
         userdata = {
             'user_id': self.request.session['id'],
             'username': self.request.session['username'],
+            'language': self.request.session['language'],
             'urls': self.request.session['urls'],
         }
         context = super(OrderCreateView, self).get_context_data(**kwargs)
@@ -366,12 +375,12 @@ class OrderCreateView(CreateView):
 #             return super(OrderUpdateView, self).form_invalid(form)
 
 
-@login_required("logged_in", 'account:login')
-@access_permission_required
-def OrderDeleteView(request, id):
-    Order.objects.get(pk=id).delete()
-    messages.error(request, 'Data Successfully Deleted')
-    return redirect('items:OrderListView')
+# @login_required("logged_in", 'account:login')
+# @access_permission_required
+# def OrderDeleteView(request, id):
+#     Order.objects.get(pk=id).delete()
+#     messages.error(request, 'Data Successfully Deleted')
+#     return redirect('items:OrderListView')
 
 
 @csrf_exempt

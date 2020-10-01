@@ -28,8 +28,8 @@
                     Welcome to Super Shop Sales management System (SSMS) - <span style="color: purple">{{ data.username }}</span>. SSMS is a e-commerce web application
                     and a web admin panel to manage a super shop sales with detailed reports.
                 {% else %}
-                    Tervetuloa että SSMS - {{ data.username }}. SSMS on verkkosovellus ja verkkopalvelu huutokauppojen
-                    luomiseen ja niihin osallistumiseen.
+                    SSMS - তে আপনাকে স্বাগতম - {{ data.username }}.
+                    SSMS - একটি ওয়েব এপলিকেশন.
                 {% endif %}
             </p>
             <div class="divider"></div>
@@ -39,7 +39,7 @@
                         {% if data.language == "Eng" %}
                             Products List: ...
                         {% else %}
-                            Aktiiviset tuotteet: Valmis huutokauppaan ...
+                            পণ্য তালিকা ...
                         {% endif %}
                     </h4>
                 </div>
@@ -48,30 +48,38 @@
                         <article class="col s12 m6 l4">
                             <div class="card z-depth-1 hoverable">
                                 <div class="card-image teal darken-2 waves-effect">
-                                    <div class="card-title">{{ each.title }}</div>
+                                    <div class="card-title">{{ each.name }}</div>
                                     <div class="price"><sup>
                                         {% if data.language == "Eng" %}
                                             Min Price
                                         {% else %}
-                                            Minimi Hinta
+                                            সর্বনিন্ম মূল্য
                                         {% endif %}
-                                        - €</sup>{{ each.min_price }}<sub>/EUR</sub>
+                                        - <b> ৳ {{ each.price }}</b>/BDT</sup>
                                     </div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
-                                            Posted On
+                                            Category
                                         {% else %}
-                                            Lähettäjä
+                                            বিভাগ
                                         {% endif %}
-                                        - {{ each.created_date }}
+                                        - {{ each.category }}
                                     </div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
-                                            Deadline
+                                            Brand
                                         {% else %}
-                                            Takaraja
+                                            ব্র্যান্ড
                                         {% endif %}
-                                        - {{ each.deadline }}
+                                        - {{ each.brand }}
+                                    </div>
+                                    <div class="price-desc">
+                                        {% if data.language == "Eng" %}
+                                            Size
+                                        {% else %}
+                                            আকার
+                                        {% endif %}
+                                        - {{ each.size }}
                                     </div>
                                 </div>
                                 <div class="card-content">
@@ -79,19 +87,9 @@
                                         <div class="col s12 m12 l12">
                                             <div class="card-panel grey lighten-5 z-depth-1">
                                                 <div class="row valign-wrapper">
-                                                    <div class="col s6 m4">
-                                                        <img src="{% static '' %}images/yaas-1.jpeg" alt=""
-                                                             class="circle responsive-img valign">
-                                                    </div>
-                                                    <div class="col s6 m8">
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
-                                                        <span class="black-text">This is a square image. Add the "circle" class to it to make it appear circular.</span>
+                                                    <div class="col s12 m12">
+                                                        <img src="{{ each.image }}" alt=""
+                                                             class="responsive-img valign" style="border-radius: 20%;">
                                                     </div>
                                                 </div>
                                             </div>
@@ -99,20 +97,20 @@
                                     </div>
                                 </div>
                                 <div class="card-action center-align">
-                                    <a href="#"
+                                    <a href="{% url 'items:ProductDetailsView' each.id %}"
                                        class="waves-effect waves-light btn green">
                                         {% if data.language == "Eng" %}
                                             View Details
                                         {% else %}
-                                            Tee tarjous
+                                            বিস্তারিত দেখুন
                                         {% endif %}
                                     </a>
-                                    <a href="#"
-                                       class="waves-effect waves-light btn red">
+                                    <a href="{% url 'items:OrderCreate' each.id %}"
+                                       class="waves-effect waves-light btn indigo">
                                         {% if data.language == "Eng" %}
                                             Order Now
                                         {% else %}
-                                            Kieltää huutokauppa
+                                            এখুনি অর্ডার করুন
                                         {% endif %}
                                     </a>
                                 </div>

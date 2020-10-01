@@ -902,4 +902,3 @@ def Get_Processed_Month(month, year):
     except Exception:
         mylog.exception('get_processed_month_for_report', exc_info=True)
         return redirect('report:profit_loss_report')
-

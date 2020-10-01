@@ -27,7 +27,13 @@
             <div id="table-datatables">
                 <div class="row">
                     <div>
-                        <h4 class="header">Users List</h4>
+                        <h4 class="header">
+                            {% if data.language == "Eng" %}
+                                User List
+                            {% else %}
+                                ইউজার লিস্ট
+                            {% endif %}
+                        </h4>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -61,10 +67,14 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                     <a href="{% url 'account:privilege_list' each.id %}" class="btn-floating waves-effect waves-light indigo"><i class="mdi-action-lock-open"></i></a>
+                                    <a href="{% url 'account:privilege_list' each.id %}"
+                                       class="btn-floating waves-effect waves-light indigo"><i
+                                            class="mdi-action-lock-open"></i></a>
                                 </td>
                                 <td>
-                                     <a href="{% url 'account:users_delete' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
+                                    <a href="#" id="del_btn" name="{{ each.id }}"
+                                       class="btn-floating waves-effect waves-light red"><i
+                                            class="mdi-action-delete"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -74,5 +84,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).on('click', '#del_btn', function (event) {
+            var url = "{% url 'account:users_delete' 123 %}";
+            var id = $(this).attr('name');
+            event.preventDefault();
+            confirmMessage(url, id);
+        });
+
+        function confirmMessage(url, id) {
+            swal({
+                    title: "Delete Request",
+                    text: "Are you sure want to delete ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (!(isConfirm)) {
+                        swal("Operation Cancelled", "...");
+                    } else {
+                        document.location.href = url.replace('123', id);
+                    }
+                });
+        }
+    </script>
 
 {% endblock %}

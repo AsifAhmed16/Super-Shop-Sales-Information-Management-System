@@ -27,11 +27,24 @@
             <div id="table-datatables">
                 <div class="row">
                     <div>
-                        <h4 class="header">Stock List</h4>
+                        <h4 class="header">
+                            {% if data.language == "Eng" %}
+                                Stock List
+                            {% else %}
+                                স্টক লিস্ট
+                            {% endif %}
+                        </h4>
                     </div>
                     <div style="float: right">
-                        <a href="{% url 'items:StockCreateView' %}" class="btn waves-effect waves-light light-green darken-4"><i
-                                class="mdi-content-add left"></i>Add Stock</a>
+                        <a href="{% url 'items:StockCreateView' %}"
+                           class="btn waves-effect waves-light light-green darken-4"><i
+                                class="mdi-content-add left"></i>
+                            {% if data.language == "Eng" %}
+                                Add Stock
+                            {% else %}
+                                স্টক ফর্ম
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -48,7 +61,7 @@
                             <th>Buying Price</th>
                             <th>Quantity</th>
                             <th>Expiry Date</th>
-                            <th>Action</th>
+                            {#                            <th>Action</th>#}
                         </tr>
                         </thead>
                         <tbody>
@@ -63,9 +76,9 @@
                                 <td>{{ each.buying_price }}</td>
                                 <td>{{ each.quantity }}</td>
                                 <td>{{ each.expiry_date|date }}</td>
-                                <td>
-                                    <a href="{% url 'items:StockDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
-                                </td>
+                                {#                                <td>#}
+                                {#                                    <a href="{% url 'items:StockDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>#}
+                                {#                                </td>#}
                             </tr>
                         {% endfor %}
                         </tbody>

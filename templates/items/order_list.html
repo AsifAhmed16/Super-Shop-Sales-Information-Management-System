@@ -27,11 +27,24 @@
             <div id="table-datatables">
                 <div class="row">
                     <div>
-                        <h4 class="header">Order List</h4>
+                        <h4 class="header">
+                            {% if data.language == "Eng" %}
+                                Order List
+                            {% else %}
+                                অর্ডার লিস্ট
+                            {% endif %}
+                        </h4>
                     </div>
                     <div style="float: right">
-                        <a href="{% url 'items:OrderCreateView' %}" class="btn waves-effect waves-light light-green darken-4"><i
-                                class="mdi-content-add left"></i>New Order</a>
+                        <a href="{% url 'items:OrderCreateView' %}"
+                           class="btn waves-effect waves-light light-green darken-4"><i
+                                class="mdi-content-add left"></i>
+                            {% if data.language == "Eng" %}
+                                New Order
+                            {% else %}
+                                অর্ডার করুন
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -47,7 +60,7 @@
                             <th>Total</th>
                             <th>Order Date</th>
                             <th>Discount</th>
-                            <th>Action</th>
+                            {#                            <th>Action</th>#}
                         </tr>
                         </thead>
                         <tbody>
@@ -67,10 +80,10 @@
                                         N/A (0%)
                                     {% endif %}
                                 </td>
-                                <td>
-{#                                    <a href="{% url 'items:OrderUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>#}
-                                    <a href="{% url 'items:OrderDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>
-                                </td>
+                                {#                                <td>#}
+                                {#                                    <a href="{% url 'items:OrderUpdateView' each.id %}" class="btn-floating waves-effect waves-light deep-orange"><i class="mdi-editor-mode-edit"></i></a>#}
+                                {#                                    <a href="{% url 'items:OrderDeleteView' each.id %}" class="btn-floating waves-effect waves-light red"><i class="mdi-action-delete"></i></a>#}
+                                {#                                </td>#}
                             </tr>
                         {% endfor %}
                         </tbody>
