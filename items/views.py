@@ -7,6 +7,8 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+import socket
+from django.core.mail import send_mail
 
 
 @method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
@@ -336,6 +338,7 @@ class OrderCreateView(CreateView):
             item.created_date = datetime.today()
             item.created_by = self.request.session['id']
             item.save()
+            mail_confirm_notification(self.request, Customer.objects.get(id=self.request.POST['customer']))
             messages.success(self.request, 'Data Successfully Saved')
             return super(OrderCreateView, self).form_valid(form)
         else:
@@ -381,6 +384,33 @@ class OrderCreateView(CreateView):
 #     Order.objects.get(pk=id).delete()
 #     messages.error(request, 'Data Successfully Deleted')
 #     return redirect('items:OrderListView')
+
+
+def is_connected():
+    try:
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        pass
+    return False
+
+
+def mail_confirm_notification(request, cust_obj):
+    mailbody = "Dear " + cust_obj.name + "," + '\n' + '\n' \
+               + "An order has been created successfully. " + '\n' + '\n'
+    mailbody = mailbody + '\n' + "Thanks." + '\n' + "SSMS Team."
+    if is_connected():
+        send_mail("New Order", mailbody, "SSMS Admin", [cust_obj.email])
+        if request.session['language'] == "Eng":
+            messages.success(request, 'A success email has been sent')
+        else:
+            messages.success(request, 'ইমেইল প্রেরণ করা হয়েছে ')
+    else:
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'নেটওয়ার্ক ইরর')
+    return
 
 
 @csrf_exempt
