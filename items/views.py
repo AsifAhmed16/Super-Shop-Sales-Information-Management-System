@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import socket
-from django.core.mail import send_mail
+# from .tasks import send_task_mail
 
 
 @method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
@@ -124,6 +124,7 @@ def ProductUpdateView(request, id):
         context['form'] = form
         img_text = item_obj.image
         context['src_image'] = img_text.decode('utf-8')
+
         if request.method == 'POST' and id:
             if form.is_valid():
                 item = form.save(commit=False)
@@ -286,64 +287,120 @@ def OrderCreate(request, id):
         img_code = img_code.decode('utf-8')
         context['src_image'] = img_code
         if request.method == 'POST':
-            if form.is_valid():
-                item = form.save(commit=False)
-                product_obj = Product.objects.get(id=request.POST['product'])
-                if int(product_obj.quantity_left) < int(request.POST['quantity']):
-                    messages.error(request, 'Product Quantity Exceed')
-                    return redirect('items:OrderListView')
-                Product.objects.filter(id=request.POST['product']).update(
-                    quantity_left=int(product_obj.quantity_left) - int(request.POST['quantity']))
-                item.net_total = item.get_total()
-                item.created_date = datetime.today()
-                item.created_by = request.session['id']
-                item.save()
-                messages.success(request, 'Data Successfully Saved')
+            if int(item_obj.quantity_left) < int(request.POST['quantity']):
+                messages.error(request, 'Product Quantity Exceed')
                 return redirect('items:OrderListView')
+            smonth, sday, syear = request.POST['ordered_date'].split('/')
+            ordered_date = str(syear) + "-" + str(smonth) + "-" + str(sday)
+            Order.objects.create(product_id=int(request.POST['product']),
+                                 customer_id=int(request.POST['customer']),
+                                 quantity=int(request.POST['quantity']),
+                                 ref_code=request.POST['ref_code'],
+                                 ordered_date=ordered_date,
+                                 shipping_address=request.POST['shipping_address'],
+                                 billing_address=request.POST['billing_address'],
+                                 discount_id=int(request.POST['discount']),
+                                 created_by=int(request.session['id']))
+            Product.objects.filter(id=request.POST['product']).update(
+                quantity_left=int(item_obj.quantity_left) - int(request.POST['quantity']))
+            o_item = Order.objects.latest('id')
+            Order.objects.filter(id=o_item.id).update(net_total=o_item.get_total())
+            # mail_confirm_notification(self.request, Customer.objects.get(id=self.request.POST['customer']))
+            messages.success(request, 'Data Successfully Saved')
+            return redirect('items:OrderListView')
         return render(request, 'items/order_form.html', context)
     except Exception as ex:
         messages.error(request, str(ex))
         return redirect('items:OrderListView')
 
 
-@method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
-@method_decorator(access_permission_required, name='dispatch')
-class OrderCreateView(CreateView):
-    model = Order
-    form_class = OrderForm
-    template_name = 'items/order_form.html'
-    success_url = reverse_lazy('items:OrderListView')
-
-    def get_context_data(self, **kwargs):
+@login_required("logged_in", 'account:login')
+@access_permission_required
+def OrderCreateView(request):
+    try:
         userdata = {
-            'user_id': self.request.session['id'],
-            'username': self.request.session['username'],
-            'language': self.request.session['language'],
-            'urls': self.request.session['urls'],
+            'user_id': request.session['id'],
+            'username': request.session['username'],
+            'language': request.session['language'],
+            'urls': request.session['urls'],
         }
-        context = super(OrderCreateView, self).get_context_data(**kwargs)
+        context = dict()
         context['data'] = userdata
-        context['form'] = self.form_class
-        return context
+        form = OrderForm()
+        context['form'] = form
+        if request.method == 'POST':
+            item_obj = get_object_or_404(Product, pk=int(request.POST['product']))
+            if int(item_obj.quantity_left) < int(request.POST['quantity']):
+                messages.error(request, 'Product Quantity Exceed')
+                return redirect('items:OrderListView')
+            smonth, sday, syear = request.POST['ordered_date'].split('/')
+            ordered_date = str(syear) + "-" + str(smonth) + "-" + str(sday)
+            discount_id = None
+            if request.POST['discount']:
+                discount_id = int(request.POST['discount'])
+            Order.objects.create(product_id=int(request.POST['product']),
+                                 customer_id=int(request.POST['customer']),
+                                 quantity=int(request.POST['quantity']),
+                                 ref_code=request.POST['ref_code'],
+                                 ordered_date=ordered_date,
+                                 shipping_address=request.POST['shipping_address'],
+                                 billing_address=request.POST['billing_address'],
+                                 discount_id=discount_id,
+                                 created_by=int(request.session['id']))
+            Product.objects.filter(id=request.POST['product']).update(
+                quantity_left=int(item_obj.quantity_left) - int(request.POST['quantity']))
+            o_item = Order.objects.latest('id')
+            Order.objects.filter(id=o_item.id).update(net_total=o_item.get_total())
+            # mail_confirm_notification(request, Customer.objects.get(id=request.POST['customer']))
+            messages.success(request, 'Data Successfully Saved')
+            return redirect('items:OrderListView')
+        return render(request, 'items/order_form.html', context)
+    except Exception as ex:
+        messages.error(request, str(ex))
+        return redirect('items:OrderListView')
 
-    def form_valid(self, form):
-        if form.is_valid:
-            item = form.save(commit=False)
-            product_obj = Product.objects.get(id=self.request.POST['product'])
-            if int(product_obj.quantity_left) < int(self.request.POST['quantity']):
-                messages.error(self.request, 'Product Quantity Exceed')
-                return super(OrderListView, self).form_invalid(form)
-            Product.objects.filter(id=self.request.POST['product']).update(quantity_left=int(product_obj.quantity_left) - int(self.request.POST['quantity']))
-            item.net_total = item.get_total()
-            item.created_date = datetime.today()
-            item.created_by = self.request.session['id']
-            item.save()
-            mail_confirm_notification(self.request, Customer.objects.get(id=self.request.POST['customer']))
-            messages.success(self.request, 'Data Successfully Saved')
-            return super(OrderCreateView, self).form_valid(form)
-        else:
-            messages.error(self.request, 'invalid')
-            return super(OrderCreateView, self).form_invalid(form)
+
+# @login_required("logged_in", 'account:login')
+# @access_permission_required
+# class OrderCreateView(request):
+#     try:
+#         userdata = {
+#             'user_id': request.session['id'],
+#             'username': request.session['username'],
+#             'language': request.session['language'],
+#             'urls': request.session['urls'],
+#         }
+#         context = dict()
+#         context['data'] = userdata
+#         form = OrderForm()
+#         context['form'] = form
+#         if request.method == 'POST':
+#             item_obj = get_object_or_404(Product, pk=int(request.POST['product']))
+#             if int(item_obj.quantity_left) < int(request.POST['quantity']):
+#                 messages.error(request, 'Product Quantity Exceed')
+#                 return redirect('items:OrderListView')
+#             smonth, sday, syear = request.POST['ordered_date'].split('/')
+#             ordered_date = str(syear) + "-" + str(smonth) + "-" + str(sday)
+#             Order.objects.create(product_id=int(request.POST['product']),
+#                                  customer_id=int(request.POST['customer']),
+#                                  quantity=int(request.POST['quantity']),
+#                                  ref_code=request.POST['ref_code'],
+#                                  ordered_date=ordered_date,
+#                                  shipping_address=request.POST['shipping_address'],
+#                                  billing_address=request.POST['billing_address'],
+#                                  discount_id=int(request.POST['discount']),
+#                                  created_by=int(request.session['id']))
+#             Product.objects.filter(id=request.POST['product']).update(
+#                 quantity_left=int(item_obj.quantity_left) - int(request.POST['quantity']))
+#             o_item = Order.objects.latest('id')
+#             Order.objects.filter(id=o_item.id).update(net_total=o_item.get_total())
+#             # mail_confirm_notification(self.request, Customer.objects.get(id=self.request.POST['customer']))
+#             messages.success(request, 'Data Successfully Saved')
+#             return redirect('items:OrderListView')
+#         return render(request, 'items/order_form.html', context)
+#     except Exception as ex:
+#         messages.error(request, str(ex))
+#         return redirect('items:OrderListView')
 
 
 # @method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
@@ -395,22 +452,22 @@ def is_connected():
     return False
 
 
-def mail_confirm_notification(request, cust_obj):
-    mailbody = "Dear " + cust_obj.name + "," + '\n' + '\n' \
-               + "An order has been created successfully. " + '\n' + '\n'
-    mailbody = mailbody + '\n' + "Thanks." + '\n' + "SSMS Team."
-    if is_connected():
-        send_mail("New Order", mailbody, "SSMS Admin", [cust_obj.email])
-        if request.session['language'] == "Eng":
-            messages.success(request, 'A success email has been sent')
-        else:
-            messages.success(request, 'ইমেইল প্রেরণ করা হয়েছে ')
-    else:
-        if request.session['language'] == "Eng":
-            messages.error(request, 'Network Error. Check your internet connection.')
-        else:
-            messages.error(request, 'নেটওয়ার্ক ইরর')
-    return
+# def mail_confirm_notification(request, cust_obj):
+#     mailbody = "Dear " + cust_obj.name + "," + '\n' + '\n' \
+#                + "An order has been created successfully. " + '\n' + '\n'
+#     mailbody = mailbody + '\n' + "Thanks." + '\n' + "SSMS Team."
+#     if is_connected():
+#         send_task_mail.delay(mailbody, cust_obj.email)
+#         if request.session['language'] == "Eng":
+#             messages.success(request, 'A success email has been sent')
+#         else:
+#             messages.success(request, 'ইমেইল প্রেরণ করা হয়েছে ')
+#     else:
+#         if request.session['language'] == "Eng":
+#             messages.error(request, 'Network Error. Check your internet connection.')
+#         else:
+#             messages.error(request, 'নেটওয়ার্ক ইরর')
+#     return
 
 
 @csrf_exempt

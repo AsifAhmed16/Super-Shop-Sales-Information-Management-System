@@ -9,7 +9,7 @@ from items.models import Product
 
 @login_required("logged_in", 'account:login')
 def index(request):
-    items = Product.objects.all()
+    items = Product.objects.all().order_by('name')
     display = [{
         'id': x.id,
         'name': x.name,
@@ -23,8 +23,7 @@ def index(request):
     context['display'] = display
     lang = "Eng"
     if request.method == 'POST':
-        items = Product.objects.all()
-        items = items.filter(name__icontains=request.POST['Search'])
+        items = Product.objects.filter(name__icontains=request.POST['Search']).order_by('name')
         display = [{
             'id': x.id,
             'name': x.name,
@@ -153,20 +152,20 @@ def register(request):
                 messages.error(request, 'Password Mismatched. Try Again')
             else:
                 messages.error(request, 'পাসওয়ার্ড মেলেনি. আবার চেষ্টা করুন')
-            return render(request, 'account/register.html')
+            return redirect('account:register')
         try:
             if Users.objects.filter(username=username).exists():
                 if request.session['language'] == "Eng":
                     messages.error(request, 'That username is already taken.')
                 else:
                     messages.error(request, 'এই ব্যবহারকারীর নামটি ইতিমধ্যে নেওয়া হয়েছে')
-                return render(request, 'account/register.html')
+                return redirect('account:register')
             if Users.objects.filter(email=email).exists():
                 if request.session['language'] == "Eng":
                     messages.error(request, 'That email id is already taken.')
                 else:
                     messages.error(request, 'এই ইমেলটি ইতিমধ্যে নেওয়া হয়েছে')
-                return render(request, 'account/register.html')
+                return redirect('account:register')
             password = hashlib.sha256(password.encode('utf-8')).hexdigest()
             Users.objects.create(username=username, password=password, email=email, name=name, location=location, phone=phone, role=role, is_active=1, language=request.session['language'])
             if request.session['language'] == "Eng":
@@ -179,7 +178,7 @@ def register(request):
                 messages.error(request, 'Sorry !!! Something Went Wrong.')
             else:
                 messages.error(request, 'দুঃখিত !!! কিছু ভুল হয়েছে')
-            return render(request, 'account/register.html')
+            return redirect('account:register')
         return redirect('account:login')
     else:
         return render(request, 'account/register.html', context)

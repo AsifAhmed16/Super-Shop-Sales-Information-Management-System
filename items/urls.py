@@ -20,7 +20,7 @@ urlpatterns = [
     # Order
     path('order/', OrderListView.as_view(), name='OrderListView'),
     path('order/create/<int:id>/', OrderCreate, name='OrderCreate'),
-    path('order/add/', OrderCreateView.as_view(), name='OrderCreateView'),
+    path('order/add/', OrderCreateView, name='OrderCreateView'),
     # path('order/edit/<int:pk>/', OrderUpdateView.as_view(), name='OrderUpdateView'),
     # path('order/delete/<int:id>/', OrderDeleteView, name='OrderDeleteView'),
 
