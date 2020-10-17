@@ -341,7 +341,7 @@ def export_product_report(request):
                 common = "font:name Calibri, bold on, height 200;  align:wrap yes, horiz center, vert center ;"
                 common1 = "align: wrap yes, horiz right, vert center ;"
 
-                columns = ['SL', 'Name', 'Brand', 'Size', 'Category', 'Expiry Date', 'Price']
+                columns = ['SL', 'Name', 'Brand', 'Size', 'Category', 'Price']
 
                 ws.write_merge(0, 1, 0, 5, 'Product Report', xlwt.easyxf(common))
                 for col in range(len(columns)):
@@ -353,8 +353,7 @@ def export_product_report(request):
                     ws.write(row_num, 2, data.brand, font_style)
                     ws.write(row_num, 3, data.size, font_style)
                     ws.write(row_num, 4, data.category.name, font_style)
-                    ws.write(row_num, 5, str(data.expiry_date), font_style)
-                    ws.write(row_num, 6, data.price, xlwt.easyxf(common1))
+                    ws.write(row_num, 5, data.price, xlwt.easyxf(common1))
                     row_num += 1
 
                 wb.save(response)
@@ -379,7 +378,6 @@ def export_product_report(request):
                                    Paragraph('Brand', parastyles),
                                    Paragraph('Size', parastyles),
                                    Paragraph('Category', parastyles),
-                                   Paragraph('Expiry Date', parastyles),
                                    Paragraph('Price', parastyles)])
 
                 texstyles = ParagraphStyle(
@@ -397,7 +395,6 @@ def export_product_report(request):
                                        Paragraph(str(data.brand), texstyles),
                                        Paragraph(str(data.size), texstyles),
                                        Paragraph(str(data.category), texstyles),
-                                       Paragraph(str(data.expiry_date), texstyles),
                                        Paragraph(str(data.price), texstyles)])
                     j = j + 1
                 t = Table(columns, repeatRows=1, splitByRow=1)
