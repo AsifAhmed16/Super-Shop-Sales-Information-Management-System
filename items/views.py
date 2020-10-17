@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import socket
-# from .tasks import send_task_mail
+from .tasks import send_task_mail
 
 
 @method_decorator(login_required("logged_in", 'account:login'), name='dispatch')
@@ -328,6 +328,7 @@ def OrderCreateView(request):
         context['data'] = userdata
         form = OrderForm()
         context['form'] = form
+        # mail_confirm_notification(request, Customer.objects.get(id=2))
         if request.method == 'POST':
             item_obj = get_object_or_404(Product, pk=int(request.POST['product']))
             if int(item_obj.quantity_left) < int(request.POST['quantity']):
@@ -452,22 +453,22 @@ def is_connected():
     return False
 
 
-# def mail_confirm_notification(request, cust_obj):
-#     mailbody = "Dear " + cust_obj.name + "," + '\n' + '\n' \
-#                + "An order has been created successfully. " + '\n' + '\n'
-#     mailbody = mailbody + '\n' + "Thanks." + '\n' + "SSMS Team."
-#     if is_connected():
-#         send_task_mail.delay(mailbody, cust_obj.email)
-#         if request.session['language'] == "Eng":
-#             messages.success(request, 'A success email has been sent')
-#         else:
-#             messages.success(request, 'ইমেইল প্রেরণ করা হয়েছে ')
-#     else:
-#         if request.session['language'] == "Eng":
-#             messages.error(request, 'Network Error. Check your internet connection.')
-#         else:
-#             messages.error(request, 'নেটওয়ার্ক ইরর')
-#     return
+def mail_confirm_notification(request, cust_obj):
+    mailbody = "Dear " + cust_obj.name + "," + '\n' + '\n' \
+               + "An order has been created successfully. " + '\n' + '\n'
+    mailbody = mailbody + '\n' + "Thanks." + '\n' + "SSMS Team."
+    if is_connected():
+        send_task_mail.delay(mailbody, cust_obj.email)
+        if request.session['language'] == "Eng":
+            messages.success(request, 'A success email has been sent')
+        else:
+            messages.success(request, 'ইমেইল প্রেরণ করা হয়েছে ')
+    else:
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'নেটওয়ার্ক ইরর')
+    return
 
 
 @csrf_exempt
